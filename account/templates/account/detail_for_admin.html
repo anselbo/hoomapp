@@ -1,0 +1,214 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block title %}
+    Profile for {{ qs.username }}
+{% endblock title %}
+
+{% block content %}
+     <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>Profile for <span class="badge badge-info">{{ qs.username }}</span></h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Profile</a></li>
+                <li class="breadcrumb-item active"><a href="#">Edit Profile</a></li>
+              </ol>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+          <div class="row justify-content-center">
+            <div class="col-lg-11">
+
+              <!-- Profile Image -->
+              <div class="card card-primary card-outline p-3">
+                <div class="card-body box-profile">
+                  <div class="text-center">
+                    {% if qs.profile.profile_pic %}
+                      <img class="profile-user-img img-fluid img-circle"
+                          src="{{ qs.profile.profile_pic.url }}"
+                          alt="User profile picture">
+                    {% else %}
+                      <img class="profile-user-img img-fluid img-circle"
+                      src="{% static 'account/dist/img/default.jpeg' %}"
+                      alt="User profile picture">
+                    {% endif %}
+                  </div>
+
+                  <h3 class="profile-username text-center">{{ qs.username }}</h3>
+
+                  {% if qs.profile.occupation %}
+                  <p class="text-muted text-center">{{ qs.profile.occupation }}</p>
+                  {% else %}
+                  <p class="text-muted text-center">No occupation added yet</p>
+                  {% endif %}
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+
+              <!-- About Me Box -->
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">About Me</h3>
+                  <h3 class="card-title float-right"><a href="{% url 'admin_change_user_password' qs.pk %}">Change {{ qs.username }} password</a></h3>
+                </div>
+                <!-- /.card-header -->
+                
+                  <div class="card-body">
+                    
+                    <strong><i class="fas fa-book mr-1"></i> Full Name</strong>
+
+                    <p class="text-muted">
+                            {{ qs.first_name }} {{ qs.last_name }}
+                    </p>
+
+                    <hr>
+
+                    <strong><i class="fas fa-book mr-1"></i> Email</strong>
+
+                    <p class="text-muted">
+                            {{ qs.email }}
+                    </p>
+
+                    <hr>
+
+                    <strong><i class="fas fa-book mr-1"></i> Education</strong>
+
+                    {% if qs.profile.educational_background %}
+                      <p class="text-muted">
+                        {{ qs.profile.educational_background }}
+                      </p>
+                      {% else %}
+                        <p class="text-muted">Add your educational background</p>
+                    {% endif %}
+
+                    <hr>
+
+                    <strong><i class="fas fa-map-marker-alt mr-1"></i> Home Address</strong>
+
+                    <p class="text-muted">{{ qs.profile.home_address }}</p>
+
+                    <hr>
+
+                    <strong><i class="fas fa-pencil-alt mr-1"></i>Occupation</strong>
+
+                    {% if qs.profile.occupation %}
+                    <p class="text-muted">
+                      {{ qs.profile.occupation }}
+                    </p>
+                      {% else %}
+                        <p class="text-muted">Add occupation</p>
+                    {% endif %}
+
+                    <hr>
+
+                    <strong><i class="fas fa-pencil-alt mr-1"></i>Sex</strong>
+                    {% if qs.profile.sex %}
+                      <p class="text-muted">
+                          {{ qs.profile.sex }}
+                      </p>
+                        {% else %}
+                          <p class="text-muted">No sex added yet</p>
+                    {% endif %}
+
+                    <hr>
+
+                    <strong><i class="fas fa-pencil-alt mr-1"></i>Marital Status</strong>
+
+                    {% if qs.profile.marital_status %}
+                      <p class="text-muted">
+                        {{ qs.profile.marital_status }}
+                      </p>
+                      {% else %}
+                        <p class="text-muted">please add marital status</p>
+                    {% endif %}
+
+                    <hr>
+
+                    <strong><i class="fas fa-pencil-alt mr-1"></i>Phone No</strong>
+                    {% if qs.profile.phone_no %}
+                      <p class="text-muted">
+                        {{ qs.profile.phone_no }}
+                      </p>
+                      {% else %}
+                        <p class="text-muted">08071245619</p>
+                    {% endif %}
+
+                    <hr>
+
+                    <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
+                      {% if qs.profile.notes %}
+                        <p class="text-muted">{{ qs.profile.notes }}</p>
+                        {% else %}
+                          <p class="text-muted">Add some notes, this could be about yourself or anything...</p>
+                      {% endif %}
+                      
+                  </div>
+                
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+            
+            
+          </div>
+          <!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </section>
+      <!-- /.content -->
+    
+
+      
+      <!-- my own another customize detail for each user -->
+     <!-- Main content -->
+     <section class="content">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <div class="col-lg-11">
+
+          
+
+            <!-- About Me Box -->
+            <div class="card card-primary mt-2">
+              <div class="card-header">
+                <h3 class="card-title"><em class="text-center">{{ qs.username }} Details</em></h3>
+              </div>
+              <!-- /.card-header -->
+              
+                <div class="card-body">
+                  <strong><i class="fas fa-book mr-1"></i><a href="{% url 'user_wear' qs.pk %}">{{ qs.username }} wears</a></strong>
+                  <hr>
+
+                  <strong><i class="fas fa-book mr-1"></i><a href="#">{{ qs.username }} finance</a></strong>
+                  <hr>
+
+                  <strong><i class="fas fa-book mr-1"></i><a href="#">{{ qs.username }} Todo list</a></strong>
+
+                </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          
+          
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+
+      
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock content %}

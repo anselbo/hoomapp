@@ -1,0 +1,169 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block title %}
+    Profile
+{% endblock title %}
+
+{% block content %}
+     <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Profile</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Profile</a></li>
+              <li class="breadcrumb-item active"><a href="{% url 'edit_profile' %}">Edit Profile</a></li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <div class="col-lg-11">
+
+            <!-- Profile Image -->
+            <div class="card card-primary card-outline p-3">
+              <div class="card-body box-profile">
+                <div class="text-center">
+                  {% if request.user.profile.profile_pic %}
+                    <a href="{{ request.user.profile.profile_pic.url }}">
+                      <img class="profile-user-img img-fluid img-circle"
+                          src="{{ request.user.profile.profile_pic.url }}"
+                          alt="User profile picture">
+                    </a>
+                  {% else %}
+                    <a href="{% static 'account/dist/img/default.jpeg' %}">
+                      <img class="profile-user-img img-fluid img-circle"
+                      src="{% static 'account/dist/img/default.jpeg' %}"
+                      alt="User profile picture">
+                    </a>
+                  {% endif %}
+                </div>
+
+                <h3 class="profile-username text-center">{{ request.user.username }}</h3>
+
+                {% if request.user.profile.occupation %}
+                <p class="text-muted text-center">{{ request.user.profile.occupation }}</p>
+                {% else %}
+                <p class="text-muted text-center">No occupation added yet</p>
+                {% endif %}
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+            <!-- About Me Box -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">About Me</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <strong><i class="fas fa-book mr-1"></i> Full Name</strong>
+
+                <p class="text-muted">
+                        {{ request.user.first_name }} {{ request.user.last_name }}
+                </p>
+
+                <hr>
+
+                <strong><i class="fas fa-book mr-1"></i> Email</strong>
+
+                <p class="text-muted">
+                        {{ request.user.email }}
+                </p>
+
+                <hr>
+
+                <strong><i class="fas fa-book mr-1"></i> Education</strong>
+
+                {% if request.user.profile.educational_background %}
+                  <p class="text-muted">
+                    {{ request.user.profile.educational_background }}
+                  </p>
+                  {% else %}
+                    <p class="text-muted">Add your educational background</p>
+                {% endif %}
+
+                <hr>
+
+                <strong><i class="fas fa-map-marker-alt mr-1"></i> Home Address</strong>
+
+                <p class="text-muted">{{ request.user.profile.home_address }}</p>
+
+                <hr>
+
+                <strong><i class="fas fa-pencil-alt mr-1"></i>Occupation</strong>
+
+                {% if request.user.profile.occupation %}
+                <p class="text-muted">
+                  {{ request.user.profile.occupation }}
+                </p>
+                  {% else %}
+                    <p class="text-muted">Add occupation</p>
+                {% endif %}
+
+                <hr>
+
+                <strong><i class="fas fa-pencil-alt mr-1"></i>Sex</strong>
+
+                <p class="text-muted">
+                  {{ request.user.profile.sex }}
+                </p>
+
+                <hr>
+
+                <strong><i class="fas fa-pencil-alt mr-1"></i>Marital Status</strong>
+
+                {% if request.user.profile.marital_status %}
+                  <p class="text-muted">
+                    {{ request.user.profile.marital_status }}
+                  </p>
+                  {% else %}
+                    <p class="text-muted">please add marital status</p>
+                {% endif %}
+
+                <hr>
+
+                <strong><i class="fas fa-pencil-alt mr-1"></i>Phone No</strong>
+                {% if request.user.profile.phone_no %}
+                  <p class="text-muted">
+                    {{ request.user.profile.phone_no }}
+                  </p>
+                  {% else %}
+                    <p class="text-muted">08071245619</p>
+                {% endif %}
+
+                <hr>
+
+                <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
+                  {% if request.user.profile.notes %}
+                    <p class="text-muted">{{ request.user.profile.notes }}</p>
+                    {% else %}
+                      <p class="text-muted">Add some notes, this could be about yourself or anything...</p>
+                  {% endif %}
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          
+          
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock content %}

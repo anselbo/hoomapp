@@ -1,0 +1,194 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block title %}
+    Finance Category List
+{% endblock title %}
+
+{% block content %}
+<div class="content-wrapper">
+     <!-- Content Header (Page header) -->
+     <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">{% if selected_category %}{{ selected_category.category_name  }}{% else %} All Finances Categories Page {% endif %}
+              </h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item">
+                  <a href="{% url 'homapp:add_fin_category' %}">
+                    <div class="btn btn-primary for_radius">Add Finance Category <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+                </a></li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+
+      <!-- small Boxes start -->
+      <section class="content">
+        <div class="container-fluid">
+            <!-- Small boxes (Stat box) -->
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+                      {% if not selected_category %}
+                      {% with finances.count as total_finances %}
+                          <h3>{{ total_finances }}</h3>
+                        {% endwith %}
+                      {% else %}
+                        {% with count_with_category.count as total_clothe_by_category %}
+                          <h3>{{ total_clothe_by_category }}</h3>
+                        {% endwith %}
+                      {% endif %}
+                      {% if not selected_category %}
+                        <p>All Finances Recorded</p>
+                      {% else %}
+                      <p>{{ selected_category.category_name }} Recorded</p>
+                      {% endif %}
+                    </div>
+                    <div class="icon">
+                    <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">All Transactions <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        {% with all_fin_categories.count as tot_fin_cat %}
+                          <h3>{{ tot_fin_cat }}</h3>
+                        {% endwith %}
+                    <p>Finances Categories</p>
+                    </div>
+                    <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="{% url 'homapp:finance_cat_list' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                      {% if last_added_fin_category %}
+                        {% for lfc in last_added_fin_category %}
+                          <h3>{{ lfc.category_name|truncatewords:2 }}</h3>
+                        {% endfor %}
+                        {% else %}
+                          <h3><em style="font-size: 18px;">No category yet</em></h3>
+                      {% endif %}
+                    <p>Last Added Category</p>
+                    </div>
+                    <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                    <h3>{{ all_deactivated_category }}</h3>
+    
+                    <p>Finance Deactivated Categories</p>
+                    </div>
+                    <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a href="{% url 'homapp:deactivated_finance_category' %}" class="small-box-footer">Deactivated finance categories <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+                </div>
+                <!-- ./col -->
+        </div>
+    </section>
+    
+      <!-- small Boxes End -->
+
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">             
+                  <h3 class="card-title">
+                    {% if not wear_category %}
+                      <div class="text-dark">{{ all_fin_cat }} Categor{{ all_fin_cat|pluralize:"y,ies" }}</div>  
+                    {% else %}
+                    <div class="text-dark">{{ wear_category.category_name }} Category </div>
+                    {% endif %}
+                  </h3>
+                
+                </div>
+                
+                
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 700px;">
+                    <table class="table table-striped table-head-fixed text-nowrap">
+                      <thead>
+                        <tr>
+                          <th style="width: 10px">S/N</th>
+                          <th>CATEGORY NAME</th>
+                          <th>DATE CREATED</th>
+                          <th>DATE UPDATED</th>
+                          <th>ACTIVATED</th>
+                          <th class="">ACTION</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for  cat in all_fin_categories %}
+                          
+                            <tr>
+                              <td>{{ forloop.counter }}</td>
+                              <td>{{ cat.category_name }}</td>
+                              <td>{{ cat.date_created }}</td>
+                              <td>{{ cat.date_updated }}</td>
+
+                              {% if cat.activate == True %}
+                                <td><span class="badge badge-success">Activated</span></td>
+                                  {% else %}
+                                  <td><span class="badge badge-danger">Not Activated</span> 
+                                {% endif %}
+
+                              <td>
+                                  <div class="d-flex">
+                                    <a href="{% url 'homapp:edit_fin_category' cat.pk %}"><i class="fas fa-edit mr-3 text-info"></i></a>
+                                    <a href="{% url 'homapp:delete_fin_category' cat.pk %}"><i class="far fa-trash-alt text-danger"></i></a>
+                                  </div>
+                                </td>
+                            </tr>
+                        
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  
+                  </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{% endblock content %}
+
+
+
+<!-- {% for clothe in  clothes %}
+          <a href="">
+            <img src="{% if clothe.photo %} {{ clothe.photo.url }} {% else %} {% static 'account/img/clothe.png' %} {% endif %}" alt="">
+          </a>
+          <a href="">{{ clothe.name }}</a>
+        {% endfor %} -->

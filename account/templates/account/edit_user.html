@@ -1,0 +1,151 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Edit user Profile
+{% endblock title %}
+
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Edit <span class="badge badge-secondary">{{ qs.username }}</span>Profile</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'homapp:wears_list' %}">Home</a></li>
+              <li class="breadcrumb-item active"><a href="{% url 'profile' %}">Profile</a></li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Edit profile and save when you are done</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form role="form" id="quickForm" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                        <div class="form-group">
+                            {{ admin_edit_user_form.username|as_crispy_field }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ admin_edit_user_form.email|as_crispy_field }}
+                        </div>
+
+                        <div class="form-group">
+                        <!-- <label for="exampleInputEmail1">First Name</label> -->
+                        {{ admin_edit_user_form.first_name|as_crispy_field }}
+                        <!-- <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"> -->
+                    </div>
+                  <div class="form-group">
+                    <!-- <label for="exampleInputEmail1">Last Name</label> -->
+                    <!-- <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"> -->
+                    {{ admin_edit_user_form.last_name|as_crispy_field }}
+                  </div>
+                  <div class="form-group">
+                    <!-- <label for="exampleInputEmail1">Educational Background</label> -->
+                    <!-- <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"> -->
+                    {{ admin_edit_user_profile_form.educational_background|as_crispy_field }}
+                  </div>
+                  <div class="form-group">
+                    <!-- <label for="exampleInputEmail1">Phone Number</label> -->
+                    <!-- <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"> -->
+                    {{ admin_edit_user_profile_form.phone_no|as_crispy_field }}
+                  </div>
+                  <div class="form-group">
+                    <!-- <label for="exampleInputEmail1">Occupation</label> -->
+                    <!-- <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"> -->
+                    {{ admin_edit_user_profile_form.occupation|as_crispy_field }}
+                  </div>
+                  <div class="form-group">
+                    <!-- <label for="exampleInputEmail1">Home Address</label> -->
+                    <!-- <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"> -->
+                    {{ admin_edit_user_profile_form.home_address|as_crispy_field }}
+                  </div>
+
+                    <div class="form-group">
+                      <!-- <label>Sex</label> -->
+                      <!-- <select class="form-control select2" style="width: 100%;"> -->
+                        {{ admin_edit_user_profile_form.sex|as_crispy_field }}
+                      <!-- </select> -->
+                    </div>
+                    <div class="form-group">
+                      <!-- <label>Sex</label> -->
+                      <!-- <select class="form-control select2" style="width: 100%;"> -->
+                        {{ admin_edit_user_profile_form.marital_status|as_crispy_field }}
+                      <!-- </select> -->
+                    </div>
+
+                    <div class="form-group">
+                          {{ admin_edit_user_profile_form.notes|as_crispy_field }}
+                    </div>
+
+  
+                  <div class="form-group">
+                    <!-- <label for="exampleInputFile">Profile Pic</label> -->
+                    <div class="input-group">
+                      <!-- <div class="custom-file"> -->
+                        <!-- <input type="file" class="custom-file-input" id="exampleInputFile"> -->
+                        {{ admin_edit_user_profile_form.profile_pic|as_crispy_field }}
+                        <!-- <label class="custom-file-label" for="exampleInputFile">Current pic:  {{ request.user.profile.profile_pic }}</label> -->
+                        
+                      <!-- </div> -->
+                    </div>
+                  </div>
+
+                    <div class="d-flex">
+                        <div class="form-group">
+                            {{ admin_edit_user_form.is_staff|as_crispy_field }}
+                        </div>
+    
+                        <div class="form-group">
+                              {{ admin_edit_user_form.is_superuser|as_crispy_field }}
+                        </div>
+    
+                        <div class="form-group">
+                            {{ admin_edit_user_form.is_active|as_crispy_field }}
+                        </div>
+                    </div>
+                    
+                  
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <input type="submit" value="Update {{ qs.username }} profile" class="btn btn-primary">
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+            </div>
+          <!--/.col (left) -->
+          <!-- right column -->
+          <div class="col-md-6">
+            admin_change_user_password
+          </div>
+          <!--/.col (right) -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock content %}

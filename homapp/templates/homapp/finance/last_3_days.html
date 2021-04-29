@@ -1,0 +1,243 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load homapp_tags %}
+{% load humanize %}
+
+{% block title %}
+{% endblock title %}
+
+{% block content %}
+<div class="content-wrapper">
+
+  <!-- Main content End-->
+      <!-- Content Header (Page header) -->
+      <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0 text-dark">{% if selected_category %}{{ selected_category.category_name  }}{% else %}Last 3 Days Summary {% endif %}
+                </h1>
+              </div><!-- /.col -->
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                  <li class="breadcrumb-item">
+                    <a href="{% url 'homapp:add_finance' %}">
+                      <div class="btn btn-primary for_radius">Add Finance <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+                  </a></li>
+                </ol>
+              </div><!-- /.col -->
+            </div><!-- /.row -->
+          </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+          <!-- Small boxes (Stat box) -->
+          <div class="row">
+              <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                  <div class="inner">
+                        <h3>&#8358 {{ total_amount_for_last_3_days|intcomma }}</h3>
+                  <p class="mb-0">Total Amount For Last 3 Days</p>
+                  <em style="font-size: 11px;">(last 3 days)</em>
+                  </div>
+                  <div class="icon">
+                  <i class="ion ion-bag"></i>
+                  </div>
+                  <a href="{% url 'homapp:finance_list' %}" class="small-box-footer"><i class="fas fa-arrow-circle-left"></i> Return</a>
+              </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                  <div class="inner">
+                      
+                        <h3>&#8358 {{ sum_last_3_days_income|intcomma }}</h3>
+                      
+                  <p class="mb-0">Total Income For The Last 3 Days</p>
+                  <em style="font-size: 11px;">(last 3 days)</em>
+                  
+                  </div>
+                  <div class="icon">
+                  <i class="ion ion-stats-bars"></i>
+                  </div>
+                  <a href="{% url 'homapp:finance_cat_list' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-danger">
+                  <div class="inner">
+                
+                  <h3>&#8358 {{ sum_last_3_days_expenses|intcomma }}</h3>
+                
+                  <p class="mb-0">Expenses For The Last 3 Days</p>
+                  <em style="font-size: 11px;">(last 3 days)</em>
+                  </div>
+                  <div class="icon">
+                  <i class="ion ion-person-add"></i>
+                  </div>
+                  <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-3 col-6">
+              <!-- small box -->
+                  <div class="small-box bg-warning">
+                      <div class="inner">
+                      <h3>{{ last_3_days_data_count|intcomma }}</h3>
+                      <p class="mb-0">Data Recorded For Last 3 Days</p>
+                      <em style="font-size: 11px;">(last 3 days)</em>
+                  </div>
+                  <div class="icon">
+                  <i class="ion ion-pie-graph"></i>
+                  </div>
+                  <a href="{% url 'homapp:deactivated_finances' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              </div>
+              </div>
+              <!-- ./col -->
+      </div>
+  </section>
+
+  <hr>      
+  <!-- Main content -->
+    <section class="content mt-4">
+
+      <!-- Default box -->
+      <div class="card card-solid">
+        <div class="card-body pb-0">
+          <div class="row d-flex align-items-stretch">
+
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0">
+                 Last 3 Days Total Amount For everything:  
+                 <span class="text-info"><br><b>&#8358  {{ total_amount_for_last_3_days|intcomma }}</b></span>
+                </div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-12">
+                      <h2 class="lead"><b>Details:</b></h2>
+                      <p class="text-muted text-sm">Last 3 Days Wears Total Amount:
+                        <span class="text-success"><br><b>&#8358  {{ last_3_days_wear_total_amount|intcomma }}</b></span>
+                         
+                      <p class="text-muted text-sm">Last 3 Days Finance Total Amount:
+                        <span class="text-danger"><br><b>&#8358  {{ last_3_days_finance_total_amount|intcomma }}</b></span>
+                         
+                    </div>
+                    
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-center">
+                    
+                    <a href="" class="btn btn-warning">
+                      <p>{{ last_3_days_data_count }} Data Recorded For Last 3 Days</p> 
+                      <p class="mb-0" style="font-size: 12px;" >{{ last_3_days_wear_count|intcomma }} Data from wear section</p>
+                      <p class="mb-0" style="font-size: 12px;" >{{ last_3_days_finance_count|intcomma }} Data from finance section</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0">
+                 Last 3 Days Total Income:  
+                 <span class="text-success"><br><b>&#8358  {{ sum_last_3_days_income|intcomma }}</b></span>
+                 
+                </div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-12">
+                      <h2 class="lead"><b>Details:</b></h2>
+                      <p class="text-muted text-sm">Last 3 Days Total Income For Wears is: 
+                        <span class="text-success"><br><b>&#8358  {{ last_3_days_wear_income|intcomma }}</b></span>
+                        
+
+                      <p class="text-muted text-sm">Last 3 Days Total Income For Finance is: 
+                        <span class="text-success"><br><b>&#8358  {{ last_3_days_finance_income|intcomma }}</b></span>
+                        
+                        
+                    </div>
+                    
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-center">
+                    
+                    <a href="" class="btn btn-warning">
+                      <p>{{ income_for_last_3_days|intcomma }} Income Recorded For Last 3 Days</p> 
+                      <p class="mb-0" style="font-size: 12px;" >{{ last_3_days_wear_income_count }} income from wear section</p>
+                      <p class="mb-0" style="font-size: 12px;" >{{ last_3_days_finance_income_count }} income from finance section</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+              <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0">
+                 Last 3 Days Total Expenses: 
+                 <span class="text-danger"><br><b>&#8358  {{ sum_last_3_days_expenses|intcomma }}</b></span>
+
+                 
+                </div>
+                <div class="card-body pt-0">
+                  <div class="row">
+                    <div class="col-12">
+                      <h2 class="lead"><b>Details:</b></h2>
+                      <p class="text-muted text-sm">Last 3 Days Total Expenses For wears is: 
+                        <span class="text-danger"><br><b>&#8358  {{ last_3_days_wear_expenses|intcomma }}</b></span>
+                        
+
+                      <p class="text-muted text-sm">Last 3 Days Total Expenses For Finance is: 
+                        <span class="text-danger"><br><b>&#8358  {{ last_3_days_finance_expenses|intcomma }}</b></span>
+                        
+                        
+                    </div>
+                    
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="text-center">
+                    
+                    <a href="" class="btn btn-warning">
+                      <p>{{ expenses_for_last_3_days|intcomma }} Expenses Recorded For Last 3 Days</p> 
+
+                      <p class="mb-0" style="font-size: 12px;" >{{ last_3_days_wear_expenses_count|intcomma }} Expenses from wear section</p>
+
+                      <p class="mb-0" style="font-size: 12px;" >{{ last_3_days_finance_expenses_count|intcomma }} Expenses from finance section</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+          <nav aria-label="Contacts Page Navigation">
+            
+          </nav>
+        </div>
+        <!-- /.card-footer -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+      
+</div>
+{% endblock content %}

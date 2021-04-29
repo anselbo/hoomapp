@@ -1,0 +1,71 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Delete Finance Category
+{% endblock title %}
+
+{% block content %}
+  
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Delete Finance Category</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active"><a href="#">Profile</a></li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Delete Finance Deactivated category here...</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <div class="card-body mt-2">
+                
+                  <h2>Are you sure you want to delete the finance category with the name: <span style="color: #6262f0;">{{ queryset.category_name }}</span>?</h2>
+                  
+                  <form action="{% url 'homapp:delete_fin_deactivated_category' queryset.pk %}" method="post">
+                    {% csrf_token %}
+                    <a class="btn btn-warning mr-3" href="{% url 'homapp:deactivated_finance_category' %}">Cancel</a>
+                    <input class="btn btn-danger" type="submit" value="Confirm">
+                  </form>
+              
+              </div>
+              
+            </div>
+            <!-- /.card -->
+            </div>
+          <!--/.col (left) -->
+          <!-- right column -->
+          <div class="col-md-6">
+
+          </div>
+          <!--/.col (right) -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock content %}

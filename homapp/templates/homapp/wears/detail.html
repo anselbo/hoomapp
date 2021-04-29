@@ -1,0 +1,117 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>{{ object.name }}</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'homapp:wears_list' %}">Return to list page</a></li>
+              <!-- <li class="breadcrumb-item active"><a href=""></a></li> -->
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card card-solid">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12 col-sm-6">
+              <h3 class="d-inline-block d-sm-none">{{ object.name }}</h3>
+              <div class="col-12">
+                <img src="{% if object.photo %}
+                {{ object.photo.url }}
+                {% else %}
+                {% static 'account/dist/img/essential_default_clothe.jpg' %}
+                {% endif %}" class="product-image" alt="Product Image">
+              </div>
+              
+            </div>
+            <div class="col-12 col-sm-6">
+              <h3 class="my-3">{{ object.name }}</h3>
+              <p>{% if object.description %} {{ object.description }} {% else %} Please you need to add a description here{% endif %}
+              </p>
+
+              <hr>
+              
+              <div class="bg-gray py-2 px-3 mt-4">
+                <h2 class="mb-0">
+                  {% if object.amount %} &#8358 {{ object.amount|intcomma }} {% else %} {% endif %}
+                </h2>
+                <h4 class="mt-0">
+                  <small style="font-size: 15px;">Amount Bought</small>
+                </h4>
+              </div>
+            
+              
+              <div class="mt-4">
+                <div class="btn btn-primary btn-lg btn-flat mr-2 ">
+                    <i class="fas fa-heart fa-lg mr-2"></i> 
+                  <a href="{% url 'homapp:wears_list_by_category' object.id %}" class="text-white">
+                    <small style="font-size: 15px;">Category: {{ object.category }}</small>
+                  </a>
+                </div>
+
+                <div class="btn btn-default btn-lg btn-flat text-center">
+                  {% if object.expenses == True %}
+                  <i class="fas fa-heart fa-lg mr-2" style="color: rgb(230, 82, 82);"></i> 
+                  <small style="font-size: 15px;">Status: Expenses</small> 
+
+                  {% else %}
+
+                  <i class="fas fa-heart fa-lg mr-2" style="color: green;"></i> 
+                  <small style="font-size: 15px;">Status: Not Expenses</small> 
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="card card-primary card-outline mt-4">
+                <div class="card-body box-profile">
+                  
+                  <h3 class="profile-username text-center mb-0">Bought From</h3>
+                  <p class="text-muted text-center mb-0">{% if object.bought_from %}{{ object.bought_from }}{% else %}Bought from the market {% endif %}</p>
+                  <p class="text-center"><small style="font-size: 12px;" class="text-muted">Date bought: {{ object.date_bought }}</small></p>
+  
+                  <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                      <b>Date Registered</b> <a class="float-right">{{ object.date_created }}</a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Date Updated</b> <a class="float-right">{{ object.date_updated }}</a>
+                      updated by {{ request.user }}
+                    </li>
+                    
+                  </ul>
+  
+                  <a href="{% url 'homapp:update_wear' object.pk %}" class="btn btn-primary btn-block"><b>Edit</b></a>
+                  
+                </div>
+                <!-- /.card-body -->
+              </div>
+
+            </div>
+          </div>
+         
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock content %}

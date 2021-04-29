@@ -1,0 +1,229 @@
+{% load static %}
+{% load homapp_tags %}
+{% load humanize %}
+
+ <!-- Main Sidebar Container -->
+ <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="index3.html" class="brand-link">
+      <img src="{% static 'account/dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+           style="opacity: .8">
+      <span class="brand-text font-weight-light">HomApp</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          {% if request.user.profile.profile_pic %}
+          <div class="image">
+            <a href="{% url 'profile' %}">
+              <img src="{{ request.user.profile.profile_pic.url }}" class="img-circle elevation-2" alt="User Image">
+            </a>
+          </div>
+          {% else %}
+          <div class="image">
+            <a href="{% url 'profile' %}">
+              <img src="{% static 'account/dist/img/default.jpeg' %}" class="img-circle elevation-2" alt="User Image">
+            </a>
+          </div>
+          {% endif %}
+          <div class="info">
+            <a href="{% url 'profile' %}" class="d-block">{{ request.user.username }}</a>
+          </div>
+        </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+
+          <li class="nav-item has-treeview menu-open">
+            {% url 'homapp:wears_list' as wears_list %}
+            {% url 'homapp:deactivated_wears' as deactivated_wears %}
+            {% url 'homapp:register_wear' as register_wear %}
+            {% url 'homapp:wears_list_by_category' as wears_list_by_category %}
+            {% url 'homapp:wear_detail' id=pk as wear_detail %}
+            {% url 'homapp:delete_wear' as delete_wear %}
+            {% url 'homapp:update_wear' wear_id=pk as update_wear %}
+            {% url 'homapp:add_category' as add_category %}
+            {% url 'homapp:category_list' as category_list %}
+            {% url 'homapp:edit_category' as edit_category %}
+            {% url 'homapp:delete_category' as delete_category %}
+            {% url 'homapp:deactivated_category' as deactivated_category %}
+
+            <a href="{{ wears_list }}" class="nav-link {% if request.path == wears_list %} 
+                                                          active
+                                                        {% endif %}
+
+                                                        {% if request.path == deactivated_wears %} 
+                                                          active
+                                                        {% endif %}
+
+                                                        {% if request.path == register_wear %}
+                                                          active
+                                                        {% endif%}
+
+                                                        {% if request.path == wears_list_by_category %}
+                                                          active
+                                                        {% endif %}
+
+                                                        {% if request.path == wear_detail %}
+                                                          active
+                                                        {% endif %}
+
+                                                        {% if request.path == delete_wear %}
+                                                          active
+                                                        {% endif %}
+
+                                                        {% if request.path == update_wear %}
+                                                          active
+                                                        {% endif %}
+
+                                                        {% if request.path == add_category %}
+                                                          active
+                                                        {% endif %}
+
+                                                        {% if request.path == category_list %}
+                                                          active
+                                                        {% endif %}
+
+                                                        {% if request.path == edit_category %}
+                                                          active
+                                                        {% endif %}
+
+                                                        {% if request.path == delete_category %}
+                                                          active
+                                                        {% endif %}
+
+                                                        {% if request.path == deactivated_category %}
+                                                          active
+                                                        {% endif %}">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                My Wears
+              </p>
+            </a>
+            
+          </li>
+
+          <li class="nav-item has-treeview menu-open">
+            {% url 'homapp:finance_list' as finance_list %}
+            {% url 'homapp:add_finance' as add_finance %}
+            {% url 'homapp:edit_finance' as edit_finance %}
+            {% url 'homapp:delete_finance' as delete_finance %}
+            {% url 'homapp:finance_cat_list' as finance_cat_list %}
+            {% url 'homapp:add_fin_category' as add_fin_category %}
+            {% url 'homapp:edit_fin_category' as edit_fin_category %}
+            {% url 'homapp:delete_fin_category' as delete_fin_category %}
+            {% url 'homapp:deactivated_finances' as deactivated_finances %}
+            {% url 'homapp:all_transactions' as all_transactions %}
+            <a href="{{ all_transactions }}" class="nav-link {% if request.path == finance_list %}
+                                                            active  
+                                                          {% elif request.path == add_finance %}
+                                                            active deactivated_finances
+                                                          {% elif request.path == edit_finance %}
+                                                            active 
+                                                          {% elif request.path == delete_finance %}
+                                                            active
+                                                          {% elif request.path == finance_cat_list %}
+                                                            active
+                                                          {% elif request.path == add_fin_category %}
+                                                            active 
+                                                          {% elif request.path == edit_fin_category %}
+                                                            active
+                                                          {% elif request.path == delete_fin_category %}
+                                                            active
+                                                          {% elif request.path == deactivated_finances %}
+                                                            active
+                                                          {% elif request.path == all_transactions %}
+                                                            active
+                                                          {% endif %}">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                My Finance
+              </p>
+            </a>
+            
+          </li>
+
+
+          
+
+            <li class="nav-item has-treeview menu-open">
+              {% url 'homapp:list_task' as list_task %}
+              {% url 'homapp:list_task_category' as list_task_category %}
+              {% url 'homapp:update_task_category' as update_task_category %}
+              <a href="{{ list_task }}" class="nav-link {% if request.path == list_task %} active 
+              {% elif request.path == list_task_category %}
+              active
+              {% endif %}">                                      <!--active-->
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  My Todo List
+                  <span class="right badge badge-danger">{{ uncompleted_tasks|intcomma }}</span>
+                </p>
+              </a>
+            </li>
+
+
+            <!-- for all my users -->
+          {% if request.user.is_staff and request.user.is_superuser %}
+            <li class="nav-item has-treeview menu-open mt-3">
+              {% url 'all_users' as all_users %}
+              <a href="{{ all_users }}" class="nav-link {% if request.path == all_users %} active 
+              {% endif %}">    
+                                                <!--active-->
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  All Users
+                  <!-- <span class="right badge badge-danger">{{ uncompleted_tasks|intcomma }}</span> -->
+                </p>
+              </a>
+            </li>
+      
+          
+            
+
+            <!-- All finance in the sidebar -->
+            <li class="nav-item has-treeview menu-open mt-1">
+              {% url 'homapp:all_wears_for_admin' as all_wears_for_admin %}
+              <a href="{{ all_wears_for_admin }}" class="nav-link {% if request.path == all_wears_for_admin %} active {% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Wears section 
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  {% url 'homapp:all_wears_for_admin' as all_wears_for_admin %}
+                  <a href="{{ all_wears_for_admin }}" class="nav-link {% if request.path == all_wears_for_admin %}active {% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All Wears</p>
+                  </a>
+                </li>
+                
+              </ul>
+            </li>
+            <!-- End finance sidebar -->
+
+
+            <!-- start Todo in the sidebar -->
+            
+            <!-- End todo in the sidebar -->
+          {% endif %}
+
+        </ul>
+
+      </nav>
+      <!-- /.sidebar-menu -->
+
+
+
+     
+    </div>
+    <!-- /.sidebar -->
+  </aside>

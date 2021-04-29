@@ -1,0 +1,367 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load homapp_tags %}
+{% load humanize %}
+
+{% block title %}
+    All Wears for admin 
+{% endblock title %}
+
+{% block content %}
+<div class="content-wrapper">
+
+<!-- Main content End-->
+     <!-- Content Header (Page header) -->
+     <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">All Wears for admin 
+              </h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item">
+                  <a href="">
+                    <div class="btn btn-primary for_radius">Add User <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+                </a></li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+       <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner">
+
+                  {% if count_users_data_selected %}
+
+                    {% with count_users_data_selected.count as total_users_data_selected %}
+                    <h3>{{ total_users_data_selected|intcomma }}</h3>
+                    {% endwith %}
+
+                    {% elif count_users_data_selected is not None %}
+                      <h3>0</h3>
+
+                    {% else %}
+
+                      {% with total_users.count as total_users %}
+                      <h3>{{ total_users|intcomma }}</h3>
+                      {% endwith %}
+                  {% endif %}
+
+                  
+                  {% if count_users_data_selected %}
+                    {% with count_users_data_selected.count as total_users_filtered %}
+                      <p>User{{ total_users_filtered|pluralize }} filtered</p>
+                    {% endwith %}
+
+                    {% elif count_users_data_selected is not None %}
+                      <p>No user filtered</p>
+
+                    {% else %}
+                      {% with total_users.count as total_users %}
+                        <p>User{{ total_users|pluralize }} in Total</p>
+                      {% endwith %}
+                  {% endif %}
+
+                  
+                </div>
+                <div class="icon">
+                <i class="ion ion-bag"></i>
+                </div>
+                <a href="" class="small-box-footer">All users<i class="fas fa-arrow-circle-down"></i></a>
+            </div>
+            </div>
+
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    {% with all_wears_for_admin.count as total_wears_from_all_users %}
+                        <h3>{{ total_wears_from_all_users|intcomma }}</h3>
+                        <p>wear{{ total_wears_from_all_users|pluralize }} in Total for all users</p>
+                    {% endwith %}
+
+                </div>
+                <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="" class="small-box-footer">Goto all admin users page <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
+
+
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                {% with total_wears_categories.count as total_wears_from_all_users %}
+                <h3>{{ total_wears_from_all_users|intcomma }}</h3>
+               
+                <p>Total wear categor{{ total_wears_from_all_users|pluralize:"y,ies" }} for all users</p>
+                {% endwith %}
+                </div>
+                <div class="icon">
+                <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer">Goto normal page <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+                <div class="inner">
+                {% with total_deactivated_wears.count as total_deactivated_wears_from_all_users %}
+                <h3>{{ total_deactivated_wears_from_all_users|intcomma }}</h3>
+               
+                <p>Total Deactivated Wear{{ total_deactivated_wears_from_all_users|pluralize }} for all users</p>
+                {% endwith %}
+                </div>
+                <div class="icon">
+                <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer">Goto normal page <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
+    </div>
+</section>
+
+      
+             <!-- for my form -->
+<form action="." method="get">
+    <div class="row">
+        <div class="col-3 ml-3 mb-2">
+          <div class="form-group">
+            <label>Categories</label>
+            <select class="form-control" name="category">
+              <option>Choose...</option>
+              {% for cat in categories %}
+              <option value="{{ cat.id }}">{{ cat }}</option>
+              {% endfor %}
+            </select>
+          </div>
+  
+              <div class="d-flex">
+                <div class="form-check mr-4">
+                  <input class="form-check-input" name="expenses" type="checkbox" value="on" id="defaultCheck1">
+                  <label class="form-check-label" for="expenses">
+                    Expenses
+                  </label>
+                </div>
+             
+              
+            
+                <div class="form-check mr-4">
+                  <input class="form-check-input" name="not_expenses" type="checkbox" value="on" id="defaultCheck1">
+                  <label class="form-check-label" for="not_expenses">
+                    NotExpenses
+                  </label>
+                </div>
+  
+                
+              </div>
+        </div>
+  
+        <div class="col-3">
+          <label>Filter date created from</label>
+          <input type="date"  class="form-control" name="start_date">
+        </div>
+  
+        <div class="col-4">
+          <label>Filter date created to</label>
+          <input type="date" class="form-control mb-2" name="end_date">
+  
+          <!-- search form -->
+          <div class="input-group input-group-sm">
+            <input class="form-control form-control-navbar" type="search" name="search" placeholder="Search by username" aria-label="Search">
+          </div>
+  
+        </div>
+  
+        
+  
+          <div class="input-group-append">
+            <button class="btn btn-navbar  mb-3" type="submit">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+    </div>
+  </form>
+
+      
+
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">    
+                 <div class="row">
+                    <div class="col-sm-7">
+                      <h3 class="card-title">
+
+                        <!-- for card title  -->
+                      </h3>
+                      
+                    </div>
+
+
+                  
+                    
+
+                  
+                   
+
+ 
+                   <div class="col-sm-5">
+                    
+                   </div>
+                 </div>
+                  
+                  
+                  
+                  
+                  
+        
+                  
+                </div>
+                
+                
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 700px;">
+                    <table class="table table-striped table-head-fixed text-nowrap">
+                      <thead>
+                        <tr>
+                          <th style="width: 10px">S/N</th>
+                          <th>USER</th>
+                          <th>NAME</th>
+                          <th>CATEGORY</th>
+                          <th>DATE CREATED</th>
+                          <th>DATE UPDATED</th>
+                          <th>AMOUNT</th>
+                          <th>DATE BOUGHT</th>
+                          <th>BOUGHT FROM</th>
+                          <th>STATUS</th>
+                          <th>EXPENSES</th>
+                          <th>ACTION</th>
+                          
+                          <!-- <th class="">ACTION</th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for user_wear in all_wears_for_admin %}
+                            <tr>
+                              <td>{{ forloop.counter }}</td>
+                              <td><a href="">{{ user_wear.user.username }}</a></td>
+                              <td>{{ user_wear.name|truncatewords:5 }}</td>
+                              <td>{% if user_wear.category.category_name %}{{ user_wear.category.category_name }}{% else %}No category{% endif %}</td>
+                              <td>{{ user_wear.date_created }}</td>
+                              <td>{{ user_wear.date_updated }}</td>
+                              <td>{{ user_wear.amount }}</td>
+                              <td>{{ user_wear.date_bought }}</td>
+                              <td>{{ user_wear.bought_from }}</td>
+
+                              <td>{% if user_wear.activate == True %}<span class="badge badge-success p-2">Activated</span> 
+                                {% else %}
+                                <span class="badge badge-danger p-2">Not Activated</span> 
+                                {% endif %}
+                              </td>
+
+                              <td>{% if user_wear.expenses == True %}<span class="badge badge-danger p-2">Expenses</span> 
+                                {% else %}
+                                <span class="badge badge-success p-2">Not Expenses</span> 
+                                {% endif %}
+                              </td>
+
+                              
+                              <td>
+                                  <div class="d-flex">
+                                    <a href=""><i class="fas fa-edit mr-3 text-info"></i></a>
+                                    <a href=""><i class="far fa-trash-alt text-danger"></i></a>
+                                  </div>
+                                </td>
+                            </tr>
+                       
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+
+
+                <!-- card footer -->
+                <!-- <div class="card-footer mt-3">
+                  <div class="row">
+                    <div class="col-sm-3"></div> -->
+
+                    <!-- pagination here -->
+                    <!-- <div class="col-sm-9">
+                      <nav aria-label="...">
+                        {% if finances.has_other_pages %}
+                          <div class="card-tools">
+                            <ul class="pagination pagination-sm float-right mt-0 mb-0">
+                              {% if finances.has_previous %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ finances.previous_page_number }}" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                </li>
+                              {% endif %}
+  
+  
+                              {% for i in finances.paginator.page_range %}
+                                {% if finances.number == i %}
+                                  <li class="page-item active" aria-current="page">
+                                    <a class="page-link" href="#">{{ i }}</a>
+                                  </li>
+                                  {% else %}
+                                
+                                    <li class="page-item" aria-current="page">
+                                      <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                              {% endfor %}
+  
+  
+                              {% if finances.has_next %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ finances.next_page_number }}">&raquo;</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a>
+                                </li>
+                                
+                              {% endif %}
+                            </ul>
+                          </div>
+                          
+                        {% endif %}
+                      </nav>
+                    </div>
+                  </div> -->
+                <!-- </div> -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,317 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load homapp_tags %}
+{% load humanize %}
+
+
+{% block title %}
+    List
+{% endblock title %}
+
+{% block content %}
+<div class="content-wrapper">
+
+<!-- Main content End-->
+     <!-- Content Header (Page header) -->
+     <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">{% if selected_category %}{{ selected_category.category_name  }}{% else %} More On Finances {% endif %}
+              </h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item">
+                  <a href="{% url 'homapp:add_finance' %}">
+                    <div class="btn btn-primary for_radius">Add Finance <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+                </a></li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+       <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                  
+                  {% if selected_category %}
+                    {% with count_finance_data_selected.count as total_finances_by_data_selected %}
+                    <h3>{{ total_finances_by_data_selected|intcomma }}</h3>
+                    {% endwith %}
+
+                    {% elif selected_category is not None %}
+                      <h3>0</h3>
+
+                    {% else %}
+
+                      {% with finances.count as total_finances %}
+                      <h3>{{ total_finances|intcomma }}</h3>
+                    {% endwith %}
+                  {% endif %}
+
+                  
+                  {% if selected_category %}
+                    <p>Data Selected ( {{ selected_category.category_name }} )</p>
+                    {% elif selected_category is not None %}
+                      <p>Data Selected ( No Data )</p>
+                    {% else %}
+                      <p>Data Selected ( All Finances )</p>
+                  {% endif %}
+
+                </div>
+                <div class="icon">
+                <i class="ion ion-bag"></i>
+                </div>
+                <a href="{% url 'homapp:all_transactions' %}" class="small-box-footer"><i class="fas fa-arrow-circle-left"></i> Return</a>
+            </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                    {% with all_fin_categories.count as tot_fin_cat %}
+                      <h3>{{ tot_fin_cat|intcomma }}</h3>
+                    {% endwith %}
+                <p>Finances Categories</p>
+                </div>
+                <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="{% url 'homapp:finance_cat_list' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+                <div class="inner">
+                {% if last_added_finance %}
+                  {% for l in last_added_finance %}
+                  <h3>{{ l.title|truncatewords:1 }}</h3>
+                  <p>Last Added Finance</p>
+                  {% endfor %}
+                      {% else %}
+                        <h3><em style="font-size: 18px;">No last added finance yet</em></h3>
+                        <p>Until you add finance</p>
+                {% endif %}
+                </div>
+                <div class="icon">
+                <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+                <div class="inner">
+                <h3>{{ deactivate_finances_count|intcomma }}</h3>
+
+                <p>All Deactivated Finances</p>
+                </div>
+                <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="{% url 'homapp:deactivated_finances' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
+    </div>
+</section>
+
+
+       <!-- for my form -->
+<form action="." method="get">
+  <div class="row">
+      <div class="col-3 ml-3 mb-2">
+        <div class="form-group">
+          <label>Categories</label>
+          <select class="form-control" name="category">
+            <option>Choose...</option>
+            {% for cat in all_fin_categories %}
+            <option value="{{ cat.id }}">{{ cat }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+          <div class="d-flex">
+              <div class="form-check mr-4">
+                <input class="form-check-input" name="expenses" type="checkbox" value="on" id="defaultCheck1">
+                <label class="form-check-label" for="expenses">
+                  Expenses
+                </label>
+              </div>
+           
+            
+          
+              <div class="form-check">
+                <input class="form-check-input" name="not_expenses" type="checkbox" value="on" id="defaultCheck1">
+                <label class="form-check-label" for="not_expenses">
+                  NotExpenses
+                </label>
+
+              </div>
+          </div>
+      </div>
+
+      <div class="col-3">
+        <label>Start Date</label>
+        <input type="date"  class="form-control" name="start_date">
+      </div>
+
+      <div class="col-4">
+        <label>End Date</label>
+        <input type="date" class="form-control mb-2" name="end_date">
+
+         <!-- search form -->
+         <div class="input-group input-group-sm">
+          <input class="form-control form-control-navbar" type="search" name="search" placeholder="Search Finance" aria-label="Search">
+        </div>
+
+
+      </div>
+
+      
+
+        <div class="input-group-append">
+          <button class="btn btn-navbar mb-3" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+  </div>
+</form>  
+
+ 
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">    
+                 <div class="row">
+                    <div class="col-sm-7">
+                      <h3 class="card-title">
+                        
+                        {% if selected_category %}
+                            {% with count_finance_data_selected.count as total_finance_by_data_selected %}
+                            <div class="text-dark">Data Selected: {{ total_finance_by_data_selected|intcomma }} ( {{ selected_category.category_name }} )</div>
+                            {% endwith %}
+
+                            {% elif selected_category is not None %}
+                              <div class="text-dark">Data Selected:  ( No data )</div>
+                            {% else %}
+                              {% with finances.count as total_finances %}
+                              <div class="text-dark">Data Selected: {{ total_finances|intcomma }} ( All Finances)</div>  
+                              {% endwith %}
+                          {% endif %}
+
+                      </h3>
+                    </div>
+
+
+                  
+                   
+
+ 
+                   <div class="col-sm-5">
+                    
+                    {% if selected_category %}
+                      <h3 class="card-title float-right">Total Amount: &#8358 {{ s_with_cat|intcomma }}</h3>
+                      {% elif selected_category is not None %}
+                      <h3 class="card-title float-right">Total Amount: &#8358 0</h3>
+                    {% else %}
+                    <h3 class="card-title float-right">Total Amount: &#8358 {{ sum_all_finances|intcomma }}</h3>
+                    {% endif %}
+
+                   </div>
+                 </div>
+                  
+                  
+                  
+                  
+                  
+        
+                  
+                </div>
+                
+                
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 700px;">
+                    <table class="table table-striped table-head-fixed text-nowrap">
+                      <thead>
+                        <tr>
+                          <th style="width: 10px">S/N</th>
+                          <th>TITLE</th>
+                          <th>AMOUNT</th>
+                          <th>CATEGORY</th>
+                          <th>DATE CREATED</th>
+                          <th>DATE UPDATED</th>
+                          <th>STATUS</th>
+                          <th class="">ACTION</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for f in finances %}
+                            <tr>
+                              <td>{{ forloop.counter }}</td>
+                              <td><a href="{% url 'homapp:finance_detail' f.pk %}">{{ f.title|truncatewords:5 }}</a></td>
+                              <td>&#8358 {{ f.amount|intcomma }}</td>
+
+                              {% if f.category.category_name is not None %}
+                              <td>{{ f.category }}</td>
+                                {% else %}
+                              <td>No category yet</td>
+                              {% endif %}
+                              
+                              <td>{{ f.date_created }}</td>
+                              <td>{{ f.date_updated }}</td>
+                              <td>{% if f.expenses == True %}<span class="badge badge-danger p-2">Expenses</span> 
+                                {% else %}
+                                <span class="badge badge-success p-2">Not Expenses</span>
+                                {% endif %}
+                              </td>
+                              <td>
+                                  <div class="d-flex">
+                                    <a href="{% url 'homapp:edit_finance' f.pk %}"><i class="fas fa-edit mr-3 text-info"></i></a>
+                                    <a href="{% url 'homapp:delete_finance' f.pk %}"><i class="far fa-trash-alt text-danger"></i></a>
+                                  </div>
+                                </td>
+                            </tr>
+                       
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+
+{% endblock content %}
+
+
+
+<!-- {% for clothe in  clothes %}
+          <a href="">
+            <img src="{% if clothe.photo %} {{ clothe.photo.url }} {% else %} {% static 'account/img/clothe.png' %} {% endif %}" alt="">
+          </a>
+          <a href="">{{ clothe.name }}</a>
+        {% endfor %} -->

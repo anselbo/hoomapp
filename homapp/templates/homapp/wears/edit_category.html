@@ -1,0 +1,147 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Edit Category
+{% endblock title %}
+
+{% block content %}
+  
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Update Category Here</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active"><a href="#">Profile</a></li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+
+
+      <!-- for dashboard start -->
+  <section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner">
+                <h3>{{ all_wears }}</h3>
+
+                <p>Total Wears</p>
+                </div>
+                <div class="icon">
+                <i class="ion ion-bag"></i>
+                </div>
+                <a href="{% url 'homapp:wears_list' %}" class="small-box-footer"><i class="fas fa-arrow-circle-left"></i> Wears page</a>
+            </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                <h3>{{ cati }}</h3>
+
+                <p>Total Categories</p>
+                </div>
+                <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="{% url 'homapp:category_list' %}" class="small-box-footer"><i class="fas fa-arrow-circle-left"></i> More info</a>
+            </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+                <div class="inner">
+                <h3>0</h3>
+
+                <p>Last Added Category</p>
+                </div>
+                <div class="icon">
+                <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+                <div class="inner">
+                <h3>0</h3>
+
+                <p>Last Deleted Category</p>
+                </div>
+                <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
+    </div>
+</section>
+      <!-- for dashboard end -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Update wear category here...</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                        
+                        <div class="form-group">
+                        {{ cat_edit_form.category_name|as_crispy_field }}
+                        </div>
+
+                        <div class="form-group ">
+                        {{ cat_edit_form.activate|as_crispy_field }}
+                        </div>      
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <input type="submit" value="Update wear category" class="btn btn-primary btn-block">
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+            </div>
+          <!--/.col (left) -->
+          <!-- right column -->
+          <div class="col-md-6">
+
+          </div>
+          <!--/.col (right) -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock content %}

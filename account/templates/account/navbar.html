@@ -1,0 +1,237 @@
+{% load static %}
+{% load homapp_tags %}
+{% load humanize %}
+
+<style>
+  .change-text{
+    font-size: 17px;
+    font-weight: 700;
+    color: rgb(69, 69, 206)!important;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+
+      {% if request.user.is_staff == True and request.user.is_superuser == True %}
+        <li class="nav-item d-none d-sm-inline-block">
+          {% url 'all_users' as all_users %}
+          <a href="{% url 'all_users' %}" class="nav-link {% if request.path == all_users %} change-text  {% endif %}">All users</a>
+        </li>
+      {% endif %}
+
+      <li class="nav-item d-none d-sm-inline-block">
+        {% url 'homapp:wears_list' as wears_list %}
+        <a href="{% url 'homapp:wears_list' %}" class="nav-link {% if request.path == wears_list %} change-text  {% endif %}">Wears</a>
+      </li>
+
+
+      <li class="nav-item d-none d-sm-inline-block">
+        {% url 'homapp:finance_list' as finance_list %}
+        <a href="{{ finance_list }}" class="nav-link {% if request.path == finance_list %} change-text  {% endif %}">Finances</a>
+      </li>
+
+      <li class="nav-item d-none d-sm-inline-block">
+        {% url 'homapp:list_task' as list_task %}
+        <a href="{{ list_task }}" class="nav-link {% if request.path == list_task %} change-text  {% endif %}">Todo List</a>
+      </li>
+    </ul>
+    
+    <!-- SEARCH FORM -->
+    
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Messages Dropdown Menu -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <i class="far fa-comments"></i>
+          <span class="badge badge-danger navbar-badge">{{ count_today_data|intcomma }}</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <a href="{% url 'homapp:today_summary' %}" class="dropdown-item">
+            <!-- Message Start -->
+            <div class="media">
+              <img src="{% static 'account/dist/img/user1-128x128.jpg' %}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+              <div class="media-body">
+                <h3 class="dropdown-item-title mb-1">
+                  Today's Summary
+                  <span class="float-right text-sm text-white badge badge-danger">{{ count_today_data|intcomma }}</span>
+                </h3>
+                <p class="text-sm">Wear Section</p>
+                <p class="text-sm mb-1">Finance Section</p>
+                
+              </div>
+            </div>
+            <!-- Message End -->
+          </a>
+
+          <div class="dropdown-divider"></div>
+          <a href="{% url 'homapp:last_3_days' %}" class="dropdown-item">
+            <!-- Message Start -->
+            <div class="media">
+              <img src="{% static 'account/dist/img/user8-128x128.jpg' %}" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <div class="media-body">
+                <h3 class="dropdown-item-title">
+                  Last 3 days Summary
+                  <span class="float-right text-sm text-white badge badge-warning">{{ sum_all_last_3_days_data|intcomma }}</span>
+                  
+
+                </h3>
+                <p class="text-sm">Wear Section</p>
+                <p class="text-sm mb-1">Finance Section</p>
+              </div>
+            </div>
+            <!-- Message End -->
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          
+
+
+          <div class="dropdown-divider"></div>
+
+          <a href="{% url 'homapp:last_7_days' %}" class="dropdown-item">
+            <!-- Message Start -->
+            <div class="media">
+              <img src="{% static 'account/dist/img/user3-128x128.jpg' %}" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <div class="media-body">
+                <h3 class="dropdown-item-title">
+                  Last 7 Days Summary
+                  <span class="float-right text-sm text-white badge badge-secondary">{{ sum_all_last_7_days_data|intcomma }}</span>
+                </h3>
+                <p class="text-sm">Wear Section</p>
+                <p class="text-sm mb-1">Finance Section</p>
+              </div>
+            </div>
+            <!-- Message End -->
+          </a>
+          
+          <a href="{% url 'homapp:current_week' %}" class="dropdown-item">
+            <!-- Message Start -->
+            <div class="media">
+              <img src="{% static 'account/dist/img/user3-128x128.jpg' %}" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <div class="media-body">
+                <h3 class="dropdown-item-title">
+                  This Week Summary
+                  <span class="float-right text-sm text-white badge badge-success">{{ sum_all_current_week_data|intcomma }}</span>
+                </h3>
+                <p class="text-sm">Wear Section</p>
+                <p class="text-sm mb-1">Finance Section</p>
+              </div>
+            </div>
+            <!-- Message End -->
+          </a>
+
+
+          <div class="dropdown-divider"></div>
+
+          
+
+          <a href="{% url 'homapp:current_month' %}" class="dropdown-item">
+            <!-- Message Start -->
+            <div class="media">
+              <img src="{% static 'account/dist/img/user3-128x128.jpg' %}" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <div class="media-body">
+                <h3 class="dropdown-item-title">
+                  This Month Summary
+                  <span class="float-right text-sm text-white badge badge-primary">{{ sum_all_current_month_dat|intcomma }}</span>
+                </h3>
+                <p class="text-sm">Wear Section</p>
+                <p class="text-sm mb-1">Finance Section</p>
+              </div>
+            </div>
+            <!-- Message End -->
+          </a>
+
+          <div class="dropdown-divider"></div>
+          
+          
+
+          <a href="{% url 'homapp:current_year' %}" class="dropdown-item">
+            <!-- Message Start -->
+            <div class="media mb-1">
+              <img src="{% static 'account/dist/img/user3-128x128.jpg' %}" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <div class="media-body">
+                <h3 class="dropdown-item-title">
+                 Year Summary
+                 <span class="float-right text-sm text-white badge badge-info">{{ sum_all_current_year_data|intcomma }}</span>
+                </h3>
+                <p class="text-sm">Wear Section</p>
+                <p class="text-sm mb-1">Finance Section</p>
+              </div>
+            </div>
+          </a>
+
+
+          <div class="dropdown-divider"></div>
+          <a href="{% url 'homapp:current_year' %}" class="dropdown-item">
+            <!-- Message Start -->
+            <div class="media mb-1">
+              <img src="{% static 'account/dist/img/user3-128x128.jpg' %}" alt="User Avatar" class="img-size-50 img-circle mr-3">
+              <div class="media-body">
+                <h3 class="dropdown-item-title">
+                 Uncompleted Tasks
+                 <span class="float-right text-sm text-white badge badge-info">{{ uncompleted_tasks|intcomma }}</span>
+                </h3>
+                <p class="text-sm">Wear Section</p>
+                <p class="text-sm mb-1">Finance Section</p>
+              </div>
+            </div>
+            <!-- Message End -->
+          </a>
+         
+
+        </div>
+      </li>
+
+
+
+
+      <!-- Notifications Dropdown Menu -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          <div class="d-flex">
+            <i class="far fa-user mr-1"></i><small class="muted">{{ request.user.username }}</small>
+          </div>
+          <!-- <span class="badge badge-warning navbar-badge">15</span> -->
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <span class="dropdown-header">Menu</span>
+          
+          <div class="dropdown-divider"></div>
+          <a href="{% url 'profile' %}" class="dropdown-item">
+            <i class="fas fa-user-tag mr-1"></i> My Profile
+            <span class="float-right text-muted text-sm">12 hours</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="{% url 'passwords_change' %}" class="dropdown-item">
+            <i class="fas fa-tools mr-1"></i> Change Password
+            <span class="float-right text-muted text-sm">12 hours</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="{% url 'logout' %}" class="dropdown-item">
+            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+            <span class="float-right text-muted text-sm">2 days</span>
+          </a>
+          <!-- <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+        </div> -->
+      </li>
+      
+      <!-- <li class="nav-item">
+        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button"><i
+            class="fas fa-th-large"></i></a>
+      </li> -->
+    </ul>
+  </nav>
+  <!-- /.navbar -->

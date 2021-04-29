@@ -1,0 +1,398 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load homapp_tags %}
+{% load humanize %}
+
+{% block title %}
+    All Users
+{% endblock title %}
+
+{% block content %}
+<div class="content-wrapper">
+
+<!-- Main content End-->
+     <!-- Content Header (Page header) -->
+     <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">{% if selected_category %}{{ selected_category.category_name  }}{% else %} All Users {% endif %}
+              </h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item">
+                  <a href="">
+                    <div class="btn btn-primary for_radius">Add User <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+                </a></li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+       <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+                <div class="inner">
+
+                  {% if count_users_data_selected %}
+
+                    {% with count_users_data_selected.count as total_users_data_selected %}
+                    <h3>{{ total_users_data_selected|intcomma }}</h3>
+                    {% endwith %}
+
+                    {% elif count_users_data_selected is not None %}
+                      <h3>0</h3>
+
+                    {% else %}
+
+                      {% with all_users.count as total_users %}
+                      <h3>{{ total_users|intcomma }}</h3>
+                      {% endwith %}
+                  {% endif %}
+
+                  
+                  {% if count_users_data_selected %}
+                    {% with count_users_data_selected.count as total_users_filtered %}
+                      <p>User{{ total_users_filtered|pluralize }} filtered</p>
+                    {% endwith %}
+
+                    {% elif count_users_data_selected is not None %}
+                      <p>No user filtered</p>
+
+                    {% else %}
+                      {% with all_users.count as total_users %}
+                        <p>User{{ total_users|pluralize }}</p>
+                      {% endwith %}
+                  {% endif %}
+
+                  
+                </div>
+                <div class="icon">
+                <i class="ion ion-bag"></i>
+                </div>
+                <a href="" class="small-box-footer">All users<i class="fas fa-arrow-circle-down"></i></a>
+            </div>
+            </div>
+
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+                <div class="inner">
+                  <h3>{{ admin_users|intcomma }}</h3>
+                  <p>Admin User{{ admin_users|pluralize }}</p>
+                </div>
+                <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="" class="small-box-footer">Goto all admin users page <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
+
+
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+              
+                <h3>{{ normal_users|intcomma }}</h3>
+               
+                <p>Normal User{{ normal_users|pluralize }}</p>
+                </div>
+                <div class="icon">
+                <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer">Goto normal page <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3><p style="font-size: 17px;">None Active User{{ non_active_userss|pluralize }}: {{ non_active_userss|intcomma }}</p></h3>
+                    
+
+                    <h3><p style="font-size: 30px;">Active User{{ active_userss|pluralize }}: {{ active_userss|intcomma }}</p></h3>
+                
+                </div>
+                <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="#" class="small-box-footer">Select any option up <i class="fas fa-arrow-circle-up"></i></a>
+            </div>
+            </div>
+            <!-- ./col -->
+    </div>
+</section>
+
+       <!-- for my form -->
+       <form action="." method="get">
+        <div class="row">
+            <!-- <div class="col-3 ml-3 mb-2">
+              <div class="form-group">
+                <label>Categories</label>
+                <select class="form-control" name="category">
+                  <option>Choose...</option>
+                  {% for cat in all_fin_categories %}
+                  <option value="{{ cat.id }}">{{ cat }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+      
+                <div class="d-flex">
+                    <div class="form-check mr-4">
+                      <input class="form-check-input" name="Active users" type="checkbox" value="on" id="defaultCheck1">
+                      <label class="form-check-label" for="Active users">
+                        Active users
+                      </label>
+                    </div>
+                 
+                  
+                
+                    <div class="form-check">
+                      <input class="form-check-input" name="Non active users" type="checkbox" value="on" id="defaultCheck1">
+                      <label class="form-check-label" for="Non active users">
+                        Non active users
+                      </label>
+                    </div>
+
+                </div>
+            </div> -->
+      
+            <div class="col-3 ml-3 mb-3">
+              <label>Start Date</label>
+              <input type="date"  class="form-control" name="start_date">
+              
+              <div class="d-flex mt-2">
+                <div class="form-check mr-4">
+                  <input class="form-check-input" name="active_users" type="checkbox" value="on" id="defaultCheck1">
+                  <label class="form-check-label" for="Active users">
+                    Active users
+                  </label>
+                </div>
+             
+              
+            
+                
+
+              </div>
+            </div>
+      
+            <div class="col-4">
+              <label>End Date</label>
+              <input type="date" class="form-control mb-2" name="end_date">
+
+              <div class="form-check">
+                <input class="form-check-input" name="non_active_users" type="checkbox" value="on" id="defaultCheck1">
+                <label class="form-check-label" for="Non active users">
+                  Non active users
+                </label>
+              </div>
+
+            </div>
+
+            <div class="col-sm-3 col-lg-4">
+              <label>search</label>
+              <!-- search form -->
+              <div class="input-group input-group-md">
+                <input class="form-control form-control-navbar" type="search" name="search" placeholder="Search username" aria-label="Search">
+              </div>
+
+            </div>
+      
+            
+      
+              <div class="input-group-append">
+                <button class="btn btn-navbar mb-3" type="submit">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+        </div>
+      </form> 
+
+      
+
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">    
+                 <div class="row">
+                    <div class="col-sm-7">
+                      <h3 class="card-title">
+
+                        {% if count_users_data_selected %}
+                          {% with count_users_data_selected.count as total_users_data_selected %}
+                          <div class="text-dark"><span class="badge badge-secondary p-1"><span class="badge badge-warning p-2" style="font-size: 13px;">{{ total_users_data_selected|intcomma }}</span> User{{ total_users_data_selected|pluralize }} filtered</span></div>
+                          {% endwith %}
+
+                          {% elif count_users_data_selected is not None %}
+                            <div class="text-dark">No user filtered</div>
+                          {% else %}
+                            {% with all_users.count as total_users %}
+                              <div class="text-dark"><span class="badge badge-primary p-1">Total user{{ total_users|pluralize }}: <span class="badge badge-danger p-2" style="font-size: 13px;">{{ total_users|intcomma }}</span></span></div>  
+                            {% endwith %}
+                        {% endif %}
+                      </h3>
+                      
+                    </div>
+
+
+                  
+                    
+
+                  
+                   
+
+ 
+                   <div class="col-sm-5">
+                    
+                   </div>
+                 </div>
+                  
+                  
+                  
+                  
+                  
+        
+                  
+                </div>
+                
+                
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="height: 700px;">
+                    <table class="table table-striped table-head-fixed text-nowrap">
+                      <thead>
+                        <tr>
+                          <th style="width: 10px">S/N</th>
+                          <th>USERNAME</th>
+                          <th>EMAIL</th>
+                          <th>FIRST NAME</th>
+                          <th>LAST NAME</th>
+                          <th>DATE JOINED</th>
+                          <th>LAST LOGIN</th>
+                          <th>STATUS</th>
+                          <th>ACTION</th>
+                          
+                          <!-- <th class="">ACTION</th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for user in all_users %}
+                            <tr>
+                              <td>{{ forloop.counter }}</td>
+                              <td><a href="{% url 'detail_for_admin' user.pk %}">{{ user.username }}</a></td>
+                              <td>{{ user.email }}</td>
+
+                              {% if user.first_name %}
+                                <td>{{ user.first_name }}</td>
+                                {% else %}
+                                    <td class="text-danger">No first name yet</td>
+                                {% endif %}
+
+                                {% if user.last_name %}
+                                    <td>{{ user.last_name }}</td>
+                                    {% else %}
+                                        <td class="text-danger">No last name yet</td>
+                                {% endif %}
+
+                              <td>{{ user.date_joined }}</td>
+                              <td>{{ user.last_login }}</td>
+
+                              
+                              <td>{% if user.is_staff and user.is_superuser %}<span class="badge badge-info p-2">Admin</span> 
+                                    {% else %}
+                                    <span class="badge badge-success p-2">Normal user</span> 
+                                  {% endif %}
+                              </td>
+                              
+                             
+                              <td>
+                                  <div class="d-flex">
+                                    <a href="{% url 'edit_user' user.pk %}"><i class="fas fa-edit mr-3 text-info"></i></a>
+                                    <a href="{% url 'delete_user' user.pk %}"><i class="far fa-trash-alt text-danger"></i></a>
+                                  </div>
+                                </td>
+                            </tr>
+                       
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+
+
+                <!-- card footer -->
+                <!-- <div class="card-footer mt-3">
+                  <div class="row">
+                    <div class="col-sm-3"></div> -->
+
+                    <!-- pagination here -->
+                    <!-- <div class="col-sm-9">
+                      <nav aria-label="...">
+                        {% if finances.has_other_pages %}
+                          <div class="card-tools">
+                            <ul class="pagination pagination-sm float-right mt-0 mb-0">
+                              {% if finances.has_previous %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ finances.previous_page_number }}" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+                                </li>
+                              {% endif %}
+  
+  
+                              {% for i in finances.paginator.page_range %}
+                                {% if finances.number == i %}
+                                  <li class="page-item active" aria-current="page">
+                                    <a class="page-link" href="#">{{ i }}</a>
+                                  </li>
+                                  {% else %}
+                                
+                                    <li class="page-item" aria-current="page">
+                                      <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                              {% endfor %}
+  
+  
+                              {% if finances.has_next %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ finances.next_page_number }}">&raquo;</a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a>
+                                </li>
+                                
+                              {% endif %}
+                            </ul>
+                          </div>
+                          
+                        {% endif %}
+                      </nav>
+                    </div>
+                  </div> -->
+                <!-- </div> -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{% endblock content %}
