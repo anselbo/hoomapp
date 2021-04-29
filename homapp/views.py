@@ -2354,6 +2354,8 @@ def update_task_deactivated_category(request, pk):
 @login_required
 @only_admin
 def all_wears_for_admin(request):
+    count_with_data_selected = None
+
     all_wears_for_admin = Wear.objects.all()
     total_users = User.objects.all()
     total_wears_categories = WearCategory.objects.all()
@@ -2392,7 +2394,7 @@ def all_wears_for_admin(request):
     
     if search != '' and search != None: 
         all_wears_for_admin = all_wears_for_admin.filter(user__username__icontains=search)
-        count_with_data_selected = all_wears_for_admin.filter(name__icontains=search)
+        count_with_data_selected = all_wears_for_admin.filter(user__username__icontains=search)
 
         
     
@@ -2411,5 +2413,6 @@ def all_wears_for_admin(request):
         'total_wears_categories': total_wears_categories,
         'total_deactivated_wears': total_deactivated_wears,
         'categories': categories,
+        'count_with_data_selected': count_with_data_selected,
     }
     return render(request, 'homapp/for_admin/all_wears_for_admin.html', context)

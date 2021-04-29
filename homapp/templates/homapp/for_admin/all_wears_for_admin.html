@@ -88,10 +88,26 @@
             <!-- small box -->
             <div class="small-box bg-warning">
                 <div class="inner">
-                    {% with all_wears_for_admin.count as total_wears_from_all_users %}
-                        <h3>{{ total_wears_from_all_users|intcomma }}</h3>
-                        <p>wear{{ total_wears_from_all_users|pluralize }} in Total for all users</p>
-                    {% endwith %}
+                    {% if count_with_data_selected %}
+                      {% with count_with_data_selected.count as count_with_data_selected %}
+                        <h3>{{ count_with_data_selected }}</h3>
+                        
+                        <p>wear{{ count_with_data_selected|pluralize }} filtered</p>
+                      {% endwith %}
+                      
+                      {% elif count_with_data_selected is not None %}
+                        <h3>0</h3>
+                        <p>No user wear was filtered</p>
+
+                      {% else %}
+                    
+                      {% with all_wears_for_admin.count as total_wears_from_all_users %}
+                          <h3>{{ total_wears_from_all_users|intcomma }}</h3>
+                          <p>wear{{ total_wears_from_all_users|pluralize }} in total for all users</p>
+                      {% endwith %}
+                    {% endif %}
+                    
+                    
 
                 </div>
                 <div class="icon">
