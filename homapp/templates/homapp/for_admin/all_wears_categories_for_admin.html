@@ -4,6 +4,7 @@
 {% load homapp_tags %}
 {% load humanize %}
 
+
 {% block title %}
     All Wears for admin 
 {% endblock title %}
@@ -17,14 +18,14 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0 text-dark">All Wears for admin 
+              <h1 class="m-0 text-dark">All Wears Categories for admin 
               </h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item">
-                  <a href="{% url 'homapp:admin_add_wear' %}">
-                    <div class="btn btn-primary for_radius">Add wear <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+                  <a href="{% url 'homapp:admin_add_wear_category' %}">
+                    <div class="btn btn-primary for_radius">Add Wear Category <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
                 </a></li>
               </ol>
             </div><!-- /.col -->
@@ -54,8 +55,8 @@
 
                     {% else %}
 
-                      {% with total_users.count as total_users %}
-                      <h3>{{ total_users|intcomma }}</h3>
+                      {% with total_users_category_owner.count as total_users_category_owner %}
+                      <h3>{{ total_users_category_owner|intcomma }}</h3>
                       {% endwith %}
                   {% endif %}
 
@@ -69,8 +70,8 @@
                       <p>No user filtered</p>
 
                     {% else %}
-                      {% with total_users.count as total_users %}
-                        <p>User{{ total_users|pluralize }} in Total</p>
+                      {% with total_users_category_owner.count as total_users_category_owner %}
+                        <p>Total users that create categor{{ total_users_category_owner|pluralize:"y,ies"}}</p>
                       {% endwith %}
                   {% endif %}
 
@@ -123,11 +124,23 @@
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                {% with total_wears_categories.count as total_wears_from_all_users %}
-                <h3>{{ total_wears_from_all_users|intcomma }}</h3>
-               
-                <p>Total wear categor{{ total_wears_from_all_users|pluralize:"y,ies" }} for all users</p>
-                {% endwith %}
+                {% if count_with_data_selected %}
+                  {% with count_with_data_selected.count as count_with_data_selected %}
+                    <h3>{{ count_with_data_selected }}</h3>
+                    <p>Total wear categor{{ count_with_data_selected|pluralize:"y,ies"}} filtered</p>
+                  {% endwith %}
+
+                    {% elif count_with_data_selected is not None %}
+                      <h3>0</h3>
+                    
+                      {% else %}
+
+                  {% with total_wears_categories.count as total_wears_categories %}
+                    <h3>{{ total_wears_categories|intcomma }}</h3>
+                    <p>Total wear categor{{ total_wears_categories|pluralize:"y,ies" }} for all users</p>
+                  {% endwith %}
+
+                {% endif %}
                 </div>
                 <div class="icon">
                 <i class="ion ion-person-add"></i>
@@ -140,10 +153,10 @@
             <!-- small box -->
             <div class="small-box bg-danger">
                 <div class="inner">
-                {% with total_deactivated_wears.count as total_deactivated_wears_from_all_users %}
-                <h3>{{ total_deactivated_wears_from_all_users|intcomma }}</h3>
+                {% with total_deactivated_wears_categories.count as total_deactivated_wears_categories %}
+                <h3>{{ total_deactivated_wears_categories|intcomma }}</h3>
                
-                <p>Total Deactivated Wear{{ total_deactivated_wears_from_all_users|pluralize }} for all users</p>
+                <p>Total Deactivated Wear Categor{{ total_deactivated_wears_categories|pluralize:"y,ies" }}</p>
                 {% endwith %}
                 </div>
                 <div class="icon">
@@ -160,7 +173,7 @@
              <!-- for my form -->
 <form action="." method="get">
     <div class="row">
-        <div class="col-3 ml-3 mb-2">
+        <!-- <div class="col-3 ml-3 mb-2">
           <div class="form-group">
             <label>Categories</label>
             <select class="form-control" name="category">
@@ -190,28 +203,51 @@
   
                 
               </div>
-        </div>
+        </div> -->
   
-        <div class="col-3">
+        <div class="col-3 ml-3 mb-2">
           <label>Filter date created from</label>
           <input type="date"  class="form-control" name="start_date">
+
+            <!-- For my activate and deactivate field section -->
+            <div class="d-flex mt-2">
+                <div class="form-check mr-4">
+                <input class="form-check-input" name="activated" type="checkbox" value="on" id="defaultCheck1">
+                <label class="form-check-label" for="activated">
+                    Activated
+                </label>
+                </div>
+            
+            
+            
+                <div class="form-check mr-4">
+                <input class="form-check-input" name="not_activated" type="checkbox" value="on" id="defaultCheck1">
+                <label class="form-check-label" for="not_activated">
+                    Not Activated
+                </label>
+                </div>
+
+                
+            </div>
         </div>
   
         <div class="col-4">
           <label>Filter date created to</label>
           <input type="date" class="form-control mb-2" name="end_date">
-  
-          <!-- search form -->
-          <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar" type="search" name="search" placeholder="Search by username" aria-label="Search">
+        </div>
+
+        
+        <div class="col-4">
+            <label>Search</label>
+             <!-- search form -->
+          <div class="input-group input-group-md">
+            <input class="form-control form-control-navbar" type="search" name="search" placeholder="Search by category name" aria-label="Search">
           </div>
   
         </div>
   
-        
-  
           <div class="input-group-append">
-            <button class="btn btn-navbar  mb-3" type="submit">
+            <button class="btn btn-navbar mb-1" type="submit">
               <i class="fas fa-search"></i>
             </button>
           </div>
@@ -264,50 +300,34 @@
                         <tr>
                           <th style="width: 10px">S/N</th>
                           <th>USER</th>
-                          <th>NAME</th>
-                          <th>CATEGORY</th>
+                          <th>CATEGORY NAME</th>
                           <th>DATE CREATED</th>
                           <th>DATE UPDATED</th>
-                          <th>AMOUNT</th>
-                          <th>DATE BOUGHT</th>
-                          <th>BOUGHT FROM</th>
                           <th>STATUS</th>
-                          <th>EXPENSES</th>
                           <th>ACTION</th>
                           
                           <!-- <th class="">ACTION</th> -->
                         </tr>
                       </thead>
                       <tbody>
-                        {% for user_wear in all_wears_for_admin %}
+                        {% for wear_category in total_wears_categories %}
                             <tr>
                               <td>{{ forloop.counter }}</td>
-                              <td><a href="">{{ user_wear.user.username }}</a></td>
-                              <td>{{ user_wear.name|truncatewords:5 }}</td>
-                              <td>{% if user_wear.category.category_name %}{{ user_wear.category.category_name }}{% else %}No category{% endif %}</td>
-                              <td>{{ user_wear.date_created }}</td>
-                              <td>{{ user_wear.date_updated }}</td>
-                              <td>{{ user_wear.amount }}</td>
-                              <td>{{ user_wear.date_bought }}</td>
-                              <td>{{ user_wear.bought_from }}</td>
+                              <td><a href="">{{ wear_category.category_owner.username }}</a></td>
+                              <td>{{ wear_category.category_name|truncatewords:5 }}</td>
+                              <td>{{ wear_category.date_created }}</td>
+                              <td>{{ wear_category.date_updated }}</td>
 
-                              <td>{% if user_wear.activate == True %}<span class="badge badge-success p-2">Activated</span> 
+                              <td>{% if wear_category.activate == True %}<span class="badge badge-success p-2">Activated</span> 
                                 {% else %}
                                 <span class="badge badge-danger p-2">Not Activated</span> 
                                 {% endif %}
                               </td>
 
-                              <td>{% if user_wear.expenses == True %}<span class="badge badge-danger p-2">Expenses</span> 
-                                {% else %}
-                                <span class="badge badge-success p-2">Not Expenses</span> 
-                                {% endif %}
-                              </td>
-
-                              
                               <td>
                                   <div class="d-flex">
-                                    <a href="{% url 'homapp:admin_edit_wear' user_wear.pk %}"><i class="fas fa-edit mr-3 text-info"></i></a>
-                                    <a href="{% url 'homapp:admin_delete_wear' user_wear.pk %}"><i class="far fa-trash-alt text-danger"></i></a>
+                                    <a href="{% url 'homapp:admin_edit_wear_category' wear_category.pk %}"><i class="fas fa-edit mr-3 text-info"></i></a>
+                                    <a href="{% url 'homapp:admin_delete_wear_category' wear_category.pk %}"><i class="far fa-trash-alt text-danger"></i></a>
                                   </div>
                                 </td>
                             </tr>

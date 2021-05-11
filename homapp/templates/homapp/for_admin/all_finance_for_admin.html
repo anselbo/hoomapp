@@ -17,14 +17,14 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0 text-dark">All Wears for admin 
+              <h1 class="m-0 text-dark">All Finances for admin 
               </h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item">
-                  <a href="{% url 'homapp:admin_add_wear' %}">
-                    <div class="btn btn-primary for_radius">Add wear <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+                  <a href="{% url 'homapp:admin_add_finance' %}">
+                    <div class="btn btn-primary for_radius">Add Finance <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
                 </a></li>
               </ol>
             </div><!-- /.col -->
@@ -42,39 +42,8 @@
             <!-- small box -->
             <div class="small-box bg-info">
                 <div class="inner">
-
-                  {% if count_users_data_selected %}
-
-                    {% with count_users_data_selected.count as total_users_data_selected %}
-                    <h3>{{ total_users_data_selected|intcomma }}</h3>
-                    {% endwith %}
-
-                    {% elif count_users_data_selected is not None %}
-                      <h3>0</h3>
-
-                    {% else %}
-
-                      {% with total_users.count as total_users %}
-                      <h3>{{ total_users|intcomma }}</h3>
-                      {% endwith %}
-                  {% endif %}
-
-                  
-                  {% if count_users_data_selected %}
-                    {% with count_users_data_selected.count as total_users_filtered %}
-                      <p>User{{ total_users_filtered|pluralize }} filtered</p>
-                    {% endwith %}
-
-                    {% elif count_users_data_selected is not None %}
-                      <p>No user filtered</p>
-
-                    {% else %}
-                      {% with total_users.count as total_users %}
-                        <p>User{{ total_users|pluralize }} in Total</p>
-                      {% endwith %}
-                  {% endif %}
-
-                  
+                    <h3>{{ total_amount_for_finance|intcomma }}</h3>
+                    <p>Total Amount of finance for all users</p>
                 </div>
                 <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -92,18 +61,18 @@
                       {% with count_with_data_selected.count as count_with_data_selected %}
                         <h3>{{ count_with_data_selected }}</h3>
                         
-                        <p>wear{{ count_with_data_selected|pluralize }} filtered</p>
+                        <p>Finance{{ count_with_data_selected|pluralize }} filtered</p>
                       {% endwith %}
                       
                       {% elif count_with_data_selected is not None %}
                         <h3>0</h3>
-                        <p>No user wear was filtered</p>
+                        <p>No user finance was filtered</p>
 
                       {% else %}
                     
-                      {% with all_wears_for_admin.count as total_wears_from_all_users %}
-                          <h3>{{ total_wears_from_all_users|intcomma }}</h3>
-                          <p>wear{{ total_wears_from_all_users|pluralize }} in total for all users</p>
+                      {% with all_finance_for_admin.count as total_finance_from_all_users %}
+                          <h3>{{ total_finance_from_all_users|intcomma }}</h3>
+                          <p>finance{{ total_finance_from_all_users|pluralize }} in total for all users</p>
                       {% endwith %}
                     {% endif %}
                     
@@ -123,10 +92,10 @@
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                {% with total_wears_categories.count as total_wears_from_all_users %}
-                <h3>{{ total_wears_from_all_users|intcomma }}</h3>
+                {% with total_finance_categories.count as total_finance_categories %}
+                <h3>{{ total_finance_categories|intcomma }}</h3>
                
-                <p>Total wear categor{{ total_wears_from_all_users|pluralize:"y,ies" }} for all users</p>
+                <p>Total finance categor{{ total_finance_categories|pluralize:"y,ies" }} for all users</p>
                 {% endwith %}
                 </div>
                 <div class="icon">
@@ -140,10 +109,10 @@
             <!-- small box -->
             <div class="small-box bg-danger">
                 <div class="inner">
-                {% with total_deactivated_wears.count as total_deactivated_wears_from_all_users %}
-                <h3>{{ total_deactivated_wears_from_all_users|intcomma }}</h3>
+                {% with total_deactivated_finance.count as total_deactivated_finance %}
+                <h3>{{ total_deactivated_finance|intcomma }}</h3>
                
-                <p>Total Deactivated Wear{{ total_deactivated_wears_from_all_users|pluralize }} for all users</p>
+                <p>Total Deactivated finance{{ total_deactivated_finance|pluralize }} for all users</p>
                 {% endwith %}
                 </div>
                 <div class="icon">
@@ -171,41 +140,39 @@
             </select>
           </div>
   
-              <div class="d-flex">
-                <div class="form-check mr-4">
-                  <input class="form-check-input" name="expenses" type="checkbox" value="on" id="defaultCheck1">
-                  <label class="form-check-label" for="expenses">
+            <div class="d-flex">
+                <div class="form-check mr-5">
+                    <input class="form-check-input" name="expenses" type="checkbox" value="on" id="defaultCheck1">
+                    <label class="form-check-label" for="expenses">
                     Expenses
-                  </label>
+                    </label>
                 </div>
-             
-              
             
-                <div class="form-check mr-4">
-                  <input class="form-check-input" name="not_expenses" type="checkbox" value="on" id="defaultCheck1">
-                  <label class="form-check-label" for="not_expenses">
+            
+        
+                <div class="form-check mr-5">
+                    <input class="form-check-input" name="not_expenses" type="checkbox" value="on" id="defaultCheck1">
+                    <label class="form-check-label" for="not_expenses">
                     NotExpenses
-                  </label>
+                    </label>
                 </div>
-  
-                
-              </div>
+
+            </div>
         </div>
   
         <div class="col-3">
-          <label>Filter date created from</label>
+          <label>From date created</label>
           <input type="date"  class="form-control" name="start_date">
         </div>
   
         <div class="col-4">
-          <label>Filter date created to</label>
+          <label>To date created</label>
           <input type="date" class="form-control mb-2" name="end_date">
   
           <!-- search form -->
           <div class="input-group input-group-sm">
             <input class="form-control form-control-navbar" type="search" name="search" placeholder="Search by username" aria-label="Search">
           </div>
-  
         </div>
   
         
@@ -215,6 +182,31 @@
               <i class="fas fa-search"></i>
             </button>
           </div>
+
+
+            <div class="d-flex mb-2">
+                <div class="col-sm-6 ml-3">
+                    <!-- for activated finance and not activated finance -->
+                    <div class="form-check mr-4">
+                        <input class="form-check-input" name="activated" type="checkbox" value="on" id="defaultCheck1">
+                        <label class="form-check-label" for="activated">
+                        Activated
+                        </label>
+                    </div>                
+                </div>
+    
+    
+                <div class="col-sm-6">
+                    <div class="form-check">
+                        <input class="form-check-input" name="not_activated" type="checkbox" value="on" id="defaultCheck1">
+                        <label class="form-check-label" for="not_activated">
+                        NotActivated
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+
     </div>
   </form>
 
@@ -264,40 +256,33 @@
                         <tr>
                           <th style="width: 10px">S/N</th>
                           <th>USER</th>
-                          <th>NAME</th>
+                          <th>TITLE</th>
                           <th>CATEGORY</th>
                           <th>DATE CREATED</th>
                           <th>DATE UPDATED</th>
                           <th>AMOUNT</th>
-                          <th>DATE BOUGHT</th>
-                          <th>BOUGHT FROM</th>
                           <th>STATUS</th>
                           <th>EXPENSES</th>
                           <th>ACTION</th>
-                          
-                          <!-- <th class="">ACTION</th> -->
                         </tr>
                       </thead>
                       <tbody>
-                        {% for user_wear in all_wears_for_admin %}
+                        {% for user_finance in all_finance_for_admin %}
                             <tr>
                               <td>{{ forloop.counter }}</td>
-                              <td><a href="">{{ user_wear.user.username }}</a></td>
-                              <td>{{ user_wear.name|truncatewords:5 }}</td>
-                              <td>{% if user_wear.category.category_name %}{{ user_wear.category.category_name }}{% else %}No category{% endif %}</td>
-                              <td>{{ user_wear.date_created }}</td>
-                              <td>{{ user_wear.date_updated }}</td>
-                              <td>{{ user_wear.amount }}</td>
-                              <td>{{ user_wear.date_bought }}</td>
-                              <td>{{ user_wear.bought_from }}</td>
-
-                              <td>{% if user_wear.activate == True %}<span class="badge badge-success p-2">Activated</span> 
+                              <td><a href="">{{ user_finance.user.username }}</a></td>
+                              <td>{{ user_finance.title|truncatewords:5 }}</td>
+                              <td>{% if user_finance.category.category_name %}{{ user_finance.category.category_name }}{% else %}No category{% endif %}</td>
+                              <td>{{ user_finance.date_created }}</td>
+                              <td>{{ user_finance.date_updated }}</td>
+                              <td>{{ user_finance.amount|intcomma }}</td>
+                              <td>{% if user_finance.activate == True %}<span class="badge badge-success p-2">Activated</span> 
                                 {% else %}
                                 <span class="badge badge-danger p-2">Not Activated</span> 
                                 {% endif %}
                               </td>
 
-                              <td>{% if user_wear.expenses == True %}<span class="badge badge-danger p-2">Expenses</span> 
+                              <td>{% if user_finance.expenses == True %}<span class="badge badge-danger p-2">Expenses</span> 
                                 {% else %}
                                 <span class="badge badge-success p-2">Not Expenses</span> 
                                 {% endif %}
@@ -306,8 +291,8 @@
                               
                               <td>
                                   <div class="d-flex">
-                                    <a href="{% url 'homapp:admin_edit_wear' user_wear.pk %}"><i class="fas fa-edit mr-3 text-info"></i></a>
-                                    <a href="{% url 'homapp:admin_delete_wear' user_wear.pk %}"><i class="far fa-trash-alt text-danger"></i></a>
+                                    <a href="{% url 'homapp:admin_edit_finance' user_finance.pk %}"><i class="fas fa-edit mr-3 text-info"></i></a>
+                                    <a href="{% url 'homapp:admin_delete_finance' user_finance.pk %}"><i class="far fa-trash-alt text-danger"></i></a>
                                   </div>
                                 </td>
                             </tr>

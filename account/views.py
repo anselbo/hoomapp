@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404 
-from .forms import UserEditForm, UserSetPasswordForm, AdminSetPasswordForm, AdminEditUserForm, AdminEditUserProfileForm, ProfileEditForm, UserRegistrationForm, LoginForm, ChangePasswordForm, CustomizePasswordResetForm
+from .forms import UserEditForm, UserSetPasswordForm, AdminAddUserForm,  AdminSetPasswordForm, AdminEditUserForm, AdminEditUserProfileForm, ProfileEditForm, UserRegistrationForm, LoginForm, ChangePasswordForm, CustomizePasswordResetForm
 from .models import Profile 
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
@@ -22,7 +22,9 @@ def register(request):
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
             messages.success(request, f"account for {new_user.username} has been created successfully".title())
-            return redirect('login')        
+            return redirect('login')    
+        else:
+            messages.error(request, 'credentials incorrect or password mismatch')    
     else:
         user_form = UserRegistrationForm()
     context = {
@@ -140,13 +142,36 @@ def edit_profile(request):
 
 
 
+
+# THIS SECTION IS FOR ADMIN ONLY
+@login_required
+@only_admin
+def admin_register_user(request):
+    admin_add_user_form = AdminAddUserForm()
+    if request.method == 'POST':
+        admin_add_user_form = AdminAddUserForm(data=request.POST)
+        if admin_add_user_form.is_valid():
+            new_user_added = admin_add_user_form.save(commit=False)
+            new_user_added.set_password(admin_add_user_form.cleaned_data['password'])
+            new_user_added.save()
+            messages.success(request, f'{new_user_added.username} was created successfully')
+            return redirect('all_users')
+        else:
+            messages.error(request, 'credentials incorrect, confirm that the two password match')
+    context = {
+        'admin_add_user_form': admin_add_user_form,
+    }
+    return render(request, 'account/admin_register_user.html', context)
+
+
+# List all users for admin only
 @login_required
 @only_admin
 def all_users(request):          
 
     count_users_data_selected = None
     
-    all_users = User.objects.all()
+    all_users = User.objects.all().order_by('-date_joined')
 
     # to count all admin users
     admin_users = User.objects.filter(is_staff=True, is_superuser=True).count()
@@ -210,7 +235,7 @@ def all_users(request):
 
 
 
-# Edit users
+# Edit users by admin only
 @login_required
 @only_admin
 def edit_user(request, pk):

@@ -29,18 +29,22 @@
       <div class="card card-solid">
         <div class="card-body">
           <div class="row">
-            <div class="col-12 col-sm-6">
+            <div class="col-12 col-sm-12 col-lg-6">
               <h3 class="d-inline-block d-sm-none">{{ object.title }}</h3>
               <div class="col-12">
-                <img src="{% if object.photo %}
-                {{ object.photo.url }}
+                {% if object.photo %}
+                  <a href="{{ object.photo.url }}">
+                    <img src="{{ object.photo.url }}" class="product-image" alt="Product Image">
+                  </a>
                 {% else %}
-                {% static 'account/dist/img/naira-notes-1.jpg' %}
-                {% endif %}" class="product-image" alt="Product Image">
+                <a href="{% static 'account/dist/img/naira-notes-1.jpg' %}">
+                  <img src="{% static 'account/dist/img/naira-notes-1.jpg' %}" class="product-image" alt="Product Image">
+                </a>
+                {% endif %}
               </div>
               
             </div>
-            <div class="col-12 col-sm-6">
+            <div class="col-12 col-sm-12 col-lg-6">
               <h3 class="my-3">{{ object.title }}</h3>
               <p>{% if object.description %} {{ object.description }} {% else %} Please you need to add a description here{% endif %}
               </p>
@@ -78,7 +82,7 @@
                 </div>
               </div>
 
-              <div class="card card-primary card-outline mt-4">
+              <div class="card card-primary card-outline mt-5">
                 <div class="card-body box-profile">
                   
                   <ul class="list-group list-group-unbordered mb-3">

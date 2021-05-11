@@ -29,18 +29,21 @@
       <div class="card card-solid">
         <div class="card-body">
           <div class="row">
-            <div class="col-12 col-sm-6">
+            <div class="col-12 col-sm-12 col-lg-6">
               <h3 class="d-inline-block d-sm-none">{{ object.name }}</h3>
               <div class="col-12">
-                <img src="{% if object.photo %}
-                {{ object.photo.url }}
+                {% if object.photo %}
+                  <a href="{{ object.photo.url }}">
+                    <img src="{{ object.photo.url }}" class="product-image" alt="Product Image">
+                  </a>
                 {% else %}
-                {% static 'account/dist/img/essential_default_clothe.jpg' %}
-                {% endif %}" class="product-image" alt="Product Image">
+                  <a href="{% static 'account/dist/img/essential_default_clothe.jpg' %}">
+                    <img src="{% static 'account/dist/img/essential_default_clothe.jpg' %}" class="product-image" alt="Product Image">
+                  </a>
               </div>
-              
+              {% endif %}
             </div>
-            <div class="col-12 col-sm-6">
+            <div class="col-12 col-sm-12 col-lg-6">
               <h3 class="my-3">{{ object.name }}</h3>
               <p>{% if object.description %} {{ object.description }} {% else %} Please you need to add a description here{% endif %}
               </p>
@@ -58,14 +61,14 @@
             
               
               <div class="mt-4">
-                <div class="btn btn-primary btn-lg btn-flat mr-2 ">
+                <div class="btn btn-primary btn-xl btn-flat mr-2 ">
                     <i class="fas fa-heart fa-lg mr-2"></i> 
                   <a href="{% url 'homapp:wears_list_by_category' object.id %}" class="text-white">
                     <small style="font-size: 15px;">Category: {{ object.category }}</small>
                   </a>
                 </div>
 
-                <div class="btn btn-default btn-lg btn-flat text-center">
+                <div class="btn btn-default btn-xl btn-flat text-center ml-5">
                   {% if object.expenses == True %}
                   <i class="fas fa-heart fa-lg mr-2" style="color: rgb(230, 82, 82);"></i> 
                   <small style="font-size: 15px;">Status: Expenses</small> 
@@ -78,7 +81,7 @@
                 </div>
               </div>
 
-              <div class="card card-primary card-outline mt-4">
+              <div class="card card-primary card-outline mt-5">
                 <div class="card-body box-profile">
                   
                   <h3 class="profile-username text-center mb-0">Bought From</h3>

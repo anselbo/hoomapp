@@ -1,0 +1,342 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load homapp_tags %}
+{% load humanize %}
+
+
+{% block title %}
+   Admin Edit Task Category for {{ qs.user.username }}
+{% endblock title %}
+
+{% block content %}
+<div class="content-wrapper">
+
+<!-- Main content End-->
+     <!-- Content Header (Page header) -->
+     <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-dark">Admin Edit Task Category for {{ qs.user.username }}
+              </h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item">
+                  
+              </li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+       <!-- Main content -->
+       <section class="content">
+        <div class="container-fluid">
+            <!-- Small boxes (Stat box) -->
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-info">
+                    <div class="inner">
+    
+                      {% if count_task_filtered %}
+                        {% with count_task_filtered.count as task_categories_selected %}
+                        <h3>{{ task_categories_selected }}</h3>
+                        {% endwith %}
+                        {% elif count_task_filtered is not None %}
+                          <h3>0</h3>
+                        {% else %}
+                          {% with all_task_category.count as total_task_categories %}
+                          <h3>{{ total_task_categories }}</h3>
+                          {% endwith %}
+                      {% endif %}
+    
+                      
+                      {% if count_task_filtered %}
+                        <p>Data filtered</p>
+                        {% elif count_task_filtered is not None %}
+                          <p>Data filtered ( No Data )</p>
+                        {% else %}
+                          <p>All Tasks Categories</p>
+                      {% endif %}
+    
+                      
+                    </div>
+                    <div class="icon">
+                    <i class="ion ion-bag"></i>
+                    </div>
+                    {% with users_that_create_task_categories.count as users_that_create_task_categories %}
+                    <a href="#" class="small-box-footer">Total user{{ users_that_create_task_categories|pluralize }} that create task categories: {{ users_that_create_task_categories }}</a>
+                    {% endwith %}
+                </div>
+                </div>
+    
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                      {% if last_added_task_category %}
+                        {% for l in last_added_task_category %}
+                        <h3>{{ l.name|truncatewords:1 }}</h3> 
+                        {% endfor %} 
+                        {% else %} 
+                        <h3><em style="font-size: 19px;">No task category yet</em></h3>
+                      {% endif %}               
+                        <p>Last Added Task Category</p>
+                    </div>
+                    <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+                </div>
+                <!-- ./col -->
+  
+                <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                  <div class="inner">
+                    {% with users_that_create_task_categories.count as users_that_create_task_categories %}
+                    <h3>{{ users_that_create_task_categories }}</h3>       
+                    {% endwith %}
+                      <p>User{{ users_that_create_task_categories|pluralize }} create task categories</p>
+                  </div>
+                    <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                    <h3>{{ deactivated_task_categories }}</h3>
+    
+                    <p>All Deactivated Tasks Categories</p>
+                    </div>
+                    <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+                </div>
+                <!-- ./col -->
+        </div>
+    </section>
+    
+
+
+<!-- Todo form -->
+<section class="content mt-4 mb-4">
+  <div class="container-fluid">
+    <div class="row">
+      <!-- left column -->
+      <div class="col-md-12">
+        <!-- jquery validation -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Add Task Category here...</h3>
+          </div>
+          <!-- /.card-header -->
+         
+        
+          
+         <!-- form start -->
+         <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="form-group">
+                        {{ admin_edit_task_category_form.user|as_crispy_field }}
+                    </div>
+
+                    <div class="form-group">
+                    {{ admin_edit_task_category_form.name|as_crispy_field }}
+                    </div>
+
+                    
+                    <div class="form-group">
+                    {{ admin_edit_task_category_form.activate|as_crispy_field }}
+                    </div>
+
+                </div>
+
+
+              <div class="col-10">
+                <input type="submit" value="Update Task Category for {{ qs.user.username }}" class="btn btn-primary btn-block">
+              </div>
+
+            </div>
+          </div>
+        </form>
+        </div>
+        <!-- /.card -->
+        </div>
+      <!--/.col (left) -->
+      
+    </div>
+    <!-- /.row -->
+  </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+
+
+       <!-- for my form -->
+       <form action="." method="get" class="mb-3">
+        <div class="row">
+            <div class="col-3 ml-3">
+              <label>Start Date</label>
+              <input type="date"  class="form-control" name="start_date">
+
+              <!-- For my activate and deactivate field section -->
+            <div class="d-flex mt-2">
+              <div class="form-check mr-4">
+              <input class="form-check-input" name="activated" type="checkbox" value="on" id="defaultCheck1">
+              <label class="form-check-label" for="activated">
+                  Activated
+              </label>
+              </div>
+          
+          
+          
+              <div class="form-check mr-4">
+              <input class="form-check-input" name="not_activated" type="checkbox" value="on" id="defaultCheck1">
+              <label class="form-check-label" for="not_activated">
+                  Not Activated
+              </label>
+              </div>
+
+              
+          </div>
+            </div>
+      
+            <div class="col-4">
+              <label>End Date</label>
+              <input type="date" class="form-control mb-2" name="end_date">
+            </div>
+
+            <div class="col-4">
+              <!-- search form -->
+                <label for="search">Search By Name</label>
+                <input class="form-control form-control-navbar" type="search" name="search" placeholder="Search Task" aria-label="Search">
+            </div>
+      
+            
+            <!-- search icon -->
+              <div class="input-group-append">
+                <button class="btn btn-navbar mt-2" type="submit">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+        </div>
+      </form> 
+
+      
+
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">    
+                 <div class="row">
+                    <div class="col-sm-7">
+                      <h3 class="card-title">
+
+                        {% if count_task_filtered %}
+                          {% with count_task_filtered.count as task_selected %}
+                          <div class="text-dark">{{ task_selected|intcomma }} Data filtered</div>
+                          {% endwith %}
+
+                          {% elif count_task_filtered is not None %}
+                            <div class="text-dark">No Data filtered</div>
+                          {% else %}
+                          {% with all_task_category.count as total_task_category_selected %}
+                            <div class="text-dark">{{ total_task_category_selected|intcomma }} Data for all categories</div> 
+                          {% endwith %} 
+                        {% endif %}
+                      </h3>
+                      
+                    </div>
+
+
+                  
+                    
+
+                  
+                   
+
+                    <!-- Amount section -->
+                   <div class="col-sm-5">
+                   </div>
+
+                 </div>
+                </div>
+                
+          
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th style="width: 10px">S/N</th>
+                          <th>USERNAME</th>
+                          <th>NAME</th>
+                          <th>DATE CREATED</th>
+                          <th>DATE UPDATED</th>
+                          <th>ACTIVATE</th>
+                          <th class="">ACTION</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for t in all_task_category %}
+                              <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ t.user.username }}</td>
+                                <td><a href="">{{ t.name }}</a></td>
+                                <td>{{ t.date_created }}</td>
+                                <td>{{ t.date_updated }}</td>
+
+                                {% if t.activate == True %}
+                                <td><span class="badge badge-success">Activated</span></td>
+                                  {% else %}
+                                  <td><span class="badge badge-danger">Not Activated</span> 
+                                {% endif %}
+
+                                <td>
+                                    <div class="d-flex">
+                                      <a href=""><i class="fas fa-edit mr-3 text-info"></i></a>
+                                      <a href=""><i class="far fa-trash-alt text-danger"></i></a>
+                                    </div>
+                                </td>
+                                
+                              </tr>
+                            
+                       
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+{% endblock content %}
+
+

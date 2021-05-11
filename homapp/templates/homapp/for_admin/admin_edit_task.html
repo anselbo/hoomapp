@@ -1,0 +1,101 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Edit Task by Admin
+{% endblock title %}
+
+  <!-- Django Tempus Dominus assets are included in `{{ form.media }}`  -->
+  {% block link %}
+    {{ admin_edit_task_form.media }}
+  {% endblock link %}
+
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Admin Edit Task</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active"><a href="#">Profile</a></li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Admin Task here...</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+                        <div class="form-group">
+                        {{ admin_edit_task_form.user|as_crispy_field }}
+                        </div>
+                        
+                        <div class="form-group">
+                        {{ admin_edit_task_form.name|as_crispy_field }}
+                        </div>
+
+                        <div class="form-group">
+                          {{ admin_edit_task_form.description|as_crispy_field }}
+                        </div>
+
+                        <div class="form-group ">
+                          {{ admin_edit_task_form.category|as_crispy_field }}
+                          </div>
+
+                        <div class="form-group ">
+                        {{ admin_edit_task_form.due|as_crispy_field }}
+                        </div>
+                  
+        
+                    <div class="form-group">
+                        {{ admin_edit_task_form.complete|as_crispy_field }}
+                    </div>
+
+                    <div class="form-group">
+                          {{ admin_edit_task_form.activate|as_crispy_field }}
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <input type="submit" value="Update Task" class="btn btn-primary btn-block">
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+            </div>
+          <!--/.col (left) -->
+          <!-- right column -->
+          <div class="col-md-6">
+
+          </div>
+          <!--/.col (right) -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock content %}

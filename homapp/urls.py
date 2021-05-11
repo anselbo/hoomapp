@@ -65,6 +65,28 @@ urlpatterns = [
 
     # for admin view only
     path('all_wears_for_admin/', views.all_wears_for_admin, name='all_wears_for_admin'),
+    path('all_wears_categories_for_admin/', views.all_wears_categories_for_admin, name='all_wears_categories_for_admin'),
+    path('all_finance_for_admin/', views.all_finance_for_admin, name='all_finance_for_admin'),
+    path('all_finance_categories_for_admin/', views.all_finance_categories_for_admin, name='all_finance_categories_for_admin'),
+    path('all_task_categories_for_admin/', views.all_task_categories_for_admin, name='all_task_categories_for_admin'),
+    path('admin_add_finance/', views.admin_add_finance, name='admin_add_finance'),
+    path('admin_add_wear/', views.admin_add_wear, name='admin_add_wear'),
+    path('admin_list_and_add_task/', views.admin_list_and_add_task, name='admin_list_and_add_task'),
+    path('admin_edit_finance/<int:pk>/', views.admin_edit_finance, name='admin_edit_finance'),
+    path('admin_delete_finance/<int:pk>/', views.admin_delete_finance, name='admin_delete_finance'),
+    path('admin_edit_task/<int:pk>/', views.admin_edit_task, name='admin_edit_task'),
+    path('admin_delete_task/<int:pk>/', views.admin_delete_task, name='admin_delete_task'),
+    path('admin_edit_wear/<int:pk>/', views.admin_edit_wear, name='admin_edit_wear'),
+    path('admin_delete_wear/<int:pk>/', views.admin_delete_wear, name='admin_delete_wear'),
+    path('admin_add_finance_category/', views.admin_add_finance_category, name='admin_add_finance_category'),
+    path('admin_edit_finance_category/<int:pk>/', views.admin_edit_finance_category, name='admin_edit_finance_category'),
+    path('admin_delete_finance_category/<int:pk>/', views.admin_delete_finance_category, name='admin_delete_finance_category'),
+    path('admin_add_wear_category/', views.admin_add_wear_category, name='admin_add_wear_category'),
+    path('admin_edit_wear_category/<int:pk>/', views.admin_edit_wear_category, name='admin_edit_wear_category'),
+    path('admin_delete_wear_category/<int:pk>/', views.admin_delete_wear_category, name='admin_delete_wear_category'),
+    path('admin_edit_task_category/<int:pk>/', views.admin_edit_task_category, name='admin_edit_task_category'),
+    path('admin_delete_task_category/<int:pk>/', views.admin_delete_task_category, name='admin_delete_task_category'),
+
 ]
 
 

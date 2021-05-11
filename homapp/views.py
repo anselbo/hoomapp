@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import WearCategory, Wear, Finance, FinanceCategory, Task, TaskCategory
 from django.db.models import Sum, DecimalField, Q, Value as V  
 from django.db.models.functions import Coalesce
-from .forms import  WearRegisterForm, EditFinanceDectForm, FinanceDeactivatedCatForm, WearEditForm, TaskCategoryForm, UpdateTaskCategoryForm, AddCategoryForm, CatEditForm,  CatSelectForm, FinCatSelectForm, FinanceAddForm, EditFinanceForm, AddFinanceCategoryForm, FinanceCatEditForm, TodoForm, UpdateTodoForm
+from .forms import AdminEditTaskCategoryForm, AdminEditWearCategoryForm, AdminAddWearCategoryForm, AdminFinanceCategoryEditForm, AdminAddFinanceCategoryForm, AdminEditWearForm,  AdminEditFinanceForm, AdminEditTaskForm, WearRegisterForm, EditFinanceDectForm, FinanceDeactivatedCatForm, WearEditForm, TaskCategoryForm, UpdateTaskCategoryForm, AddCategoryForm, CatEditForm,  CatSelectForm, FinCatSelectForm, FinanceAddForm, EditFinanceForm, AddFinanceCategoryForm, FinanceCatEditForm, TodoForm, UpdateTodoForm, AdminAddFinanceForm, AdminAddWearForm, AdminAddTaskForm
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -16,6 +16,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from homapp_project.decorators import only_admin, unauthorized_user
 from django.contrib.auth.models import User
+from django.contrib.postgres.search import SearchVector
 
 
 
@@ -2253,11 +2254,11 @@ def deactivated_task(request):
 # Update deactivated task
 @login_required
 def update_todo_task_deactivated(request, pk):  
-    qs = get_object_or_404(Task, activate=False,  id=pk, user_id=request.user.id)
-    todo_update_form = UpdateTodoForm(instance=qs)
+    qs = get_object_or_404(Task, activate=False,  id=pk)
+    todo_update_form = UpdateTodoForm(request.user, instance=qs)
     # Processing the data inside the form
     if request.method == 'POST':
-        todo_update_form = UpdateTodoForm(request.POST, instance=qs)
+        todo_update_form = UpdateTodoForm(request.user, request.POST,instance=qs)
         if todo_update_form.is_valid():
             add_user = todo_update_form.save(commit=False)
             add_user.user_id = request.user.id
@@ -2416,3 +2417,770 @@ def all_wears_for_admin(request):
         'count_with_data_selected': count_with_data_selected,
     }
     return render(request, 'homapp/for_admin/all_wears_for_admin.html', context)
+
+
+
+# Only Admin users will be able to edit wear here
+@login_required
+@only_admin
+def admin_edit_wear(request, pk):
+    qs = get_object_or_404(Wear, id=pk)
+    admin_edit_wear_form = AdminEditWearForm(instance=qs)
+    if request.method == 'POST':
+        admin_edit_wear_form = AdminEditWearForm(request.POST, instance=qs)
+        if admin_edit_wear_form.is_valid():
+            get_user_username = admin_edit_wear_form.save(commit=False)
+            get_user_username.save()
+            messages.success(request, f'wear for {get_user_username.user.username} was updated successfully')
+            return redirect('homapp:all_wears_for_admin')
+
+    context = {
+        'qs': qs, 
+        'admin_edit_wear_form': admin_edit_wear_form,
+    }
+    return render(request, 'homapp/for_admin/admin_edit_wear.html', context)
+
+
+# Only admin users will be able to delete any wear 
+@login_required
+@only_admin
+def admin_delete_wear(request, pk):
+    qs = get_object_or_404(Wear, id=pk)
+    if request.method == 'POST':
+        qs.delete()
+        messages.success(request, f'wear was deleted successfully for {qs.user.username}')
+        return redirect('homapp:all_wears_for_admin')
+
+    context = {
+        'qs': qs,
+    }
+    return render(request, 'homapp/for_admin/admin_delete_wear.html', context)
+
+
+
+# Only admin users to see all wear categories from all users
+@login_required
+@only_admin
+def all_wears_categories_for_admin(request):
+    count_with_data_selected = None
+
+    all_wears_for_admin = Wear.objects.all()
+    """ i am using values_list and adding flat=True and .distinct() so that i can get only the owners of each category and count them, 
+    remember that a single user can have many categories created by only him/her, so i needed a way to count only those 
+    categories creators only """
+    total_users_category_owner = WearCategory.objects.values_list('category_owner', flat=True).distinct()
+    total_wears_categories = WearCategory.objects.all()
+    total_deactivated_wears_categories = WearCategory.objects.filter(activate=False)
+
+    # for my filter categories selection
+    categories = WearCategory.objects.all()
+
+
+    # getting the names from the form
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    activated = request.GET.get('activated')
+    not_activated = request.GET.get('not_activated')
+    search = request.GET.get('search')
+
+
+    if start_date != '' and start_date != None:
+        total_wears_categories = total_wears_categories.filter(date_created__gte=start_date)
+        count_with_data_selected = total_wears_categories.filter(date_created__gte=start_date)
+
+    
+
+    if end_date != '' and end_date != None:
+        total_wears_categories = total_wears_categories.filter(date_created__lt=end_date)
+        count_with_data_selected = total_wears_categories.filter(date_created__lt=end_date)
+
+
+    
+    if search != '' and search != None: 
+        total_wears_categories = total_wears_categories.filter(category_name__icontains=search)
+        count_with_data_selected = total_wears_categories.filter(category_name__icontains=search)
+
+        
+    
+    if activated == 'on':
+        total_wears_categories = total_wears_categories.filter(activate=True)
+        count_with_data_selected = total_wears_categories.filter(activate=True)
+        
+        
+    elif not_activated == 'on':
+        total_wears_categories = total_wears_categories.filter(activate=False)
+        count_with_data_selected = total_wears_categories.filter(activate=False)
+
+    context = {
+        'all_wears_for_admin': all_wears_for_admin,
+        'total_users_category_owner': total_users_category_owner,
+        'total_wears_categories': total_wears_categories,
+        'total_deactivated_wears_categories': total_deactivated_wears_categories,
+        'count_with_data_selected': count_with_data_selected,
+
+        'categories': categories,
+    }
+    return render(request, 'homapp/for_admin/all_wears_categories_for_admin.html', context)
+
+# Only admin will be able to add wear category for any user
+@login_required
+@only_admin
+def admin_add_wear_category(request):
+    admin_add_wear_category_form = AdminAddWearCategoryForm()
+    if request.method == 'POST':
+        admin_add_wear_category_form = AdminAddWearCategoryForm(request.POST)
+        if admin_add_wear_category_form.is_valid():
+            get_user_username = admin_add_wear_category_form.save(commit=False)
+            get_user_username.save()
+            messages.success(request, f'{get_user_username.category_name} wear category was added successfully for {get_user_username.category_owner.username}')
+            return redirect('homapp:all_wears_categories_for_admin')
+
+
+    context = {
+        'admin_add_wear_category_form': admin_add_wear_category_form,
+    }
+    return render(request, 'homapp/for_admin/admin_add_wear_category.html', context)
+
+
+# Admin to edit wear category for any user
+@login_required
+@only_admin
+def admin_edit_wear_category(request, pk):
+    qs = get_object_or_404(WearCategory, id=pk)
+    admin_edit_wear_category_form = AdminEditWearCategoryForm(instance=qs)
+    if request.method == 'POST': 
+        admin_edit_wear_category_form = AdminEditWearCategoryForm(request.POST, instance=qs)
+        if admin_edit_wear_category_form.is_valid():
+            get_user_username = admin_edit_wear_category_form.save(commit=False)
+            get_user_username.save()
+            messages.success(request, f'{get_user_username.category_name} category was updated successfully for { get_user_username.category_owner.username }')
+            return redirect('homapp:all_wears_categories_for_admin')
+
+    context = {
+        'qs': qs, 
+        'admin_edit_wear_category_form': admin_edit_wear_category_form,
+    }
+    return render(request, 'homapp/for_admin/admin_edit_wear_category.html', context)
+
+
+
+# Admin delete wear category
+@login_required
+@only_admin
+def admin_delete_wear_category(request, pk):
+    qs = get_object_or_404(WearCategory, id=pk)
+    if request.method == 'POST':
+        qs.delete()
+        messages.success(request, f'{qs.category_name} category was deleted successfully for {qs.category_owner.username }')
+        return redirect('homapp:all_wears_categories_for_admin')
+
+    context = {
+        'qs': qs,
+    }
+    return render(request, 'homapp/for_admin/admin_delete_wear_category.html', context )
+
+
+# Admin views only to see all finance
+@login_required
+@only_admin
+def all_finance_for_admin(request):
+    count_with_data_selected = None
+
+    all_finance_for_admin = Finance.objects.all()
+    total_users_for_admin = User.objects.all()
+    total_finance_categories = FinanceCategory.objects.all()
+    total_deactivated_finance = Finance.objects.filter(activate=False)
+    categories = FinanceCategory.objects.all()
+
+    total_amount_for_finance = Finance.objects.all().aggregate(p=Coalesce(Sum('amount'), V(0)))
+    total_amount_for_finance = total_amount_for_finance.get('p')
+
+
+ 
+
+    # getting the names from the form
+    category = request.GET.get('category')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    expenses = request.GET.get('expenses')
+    not_expenses = request.GET.get('not_expenses')
+    activated = request.GET.get('activated')
+    not_activated = request.GET.get('not_activated')
+    search = request.GET.get('search')
+
+    
+    if category != '' and category != None and category != 'Choose...':
+        all_finance_for_admin = all_finance_for_admin.filter(category_id=category)
+        count_with_data_selected = all_finance_for_admin.filter(category_id=category)
+        selected_category = get_object_or_404(WearCategory, id=category)  # i grab the value of the category selected above and push it in for category table using the id and from here, i can access all the atribute of the wearcategory table
+
+        
+       
+    
+    if start_date != '' and start_date != None:
+       all_finance_for_admin = all_finance_for_admin.filter(date_created__gte=start_date)
+       count_with_data_selected = all_finance_for_admin.filter(date_created__gte=start_date)
+
+    
+
+    if end_date != '' and end_date != None:
+        all_finance_for_admin = all_finance_for_admin.filter(date_created__lt=end_date)
+        count_with_data_selected = all_finance_for_admin.filter(date_created__lt=end_date)
+
+
+    
+    if search != '' and search != None: 
+        all_finance_for_admin = all_finance_for_admin.filter(user__username__icontains=search)
+        count_with_data_selected = all_finance_for_admin.filter(user__username__icontains=search)
+
+        
+    
+    if expenses == 'on':
+        all_finance_for_admin = all_finance_for_admin.filter(expenses=True)
+        count_with_data_selected =all_finance_for_admin.filter(expenses=True)
+        
+        
+    if not_expenses == 'on':
+        all_finance_for_admin = all_finance_for_admin.filter(expenses=False)
+        count_with_data_selected = all_finance_for_admin.filter(expenses=False)
+
+    if activated == 'on':
+        all_finance_for_admin = all_finance_for_admin.filter(activate=True)
+        count_with_data_selected =all_finance_for_admin.filter(activate=True)
+        
+        
+    elif not_activated == 'on':
+        all_finance_for_admin = all_finance_for_admin.filter(activate=False)
+        count_with_data_selected = all_finance_for_admin.filter(activate=False)
+
+    context = {
+        'all_finance_for_admin': all_finance_for_admin,
+        'total_users_for_admin': total_users_for_admin,
+        'total_finance_categories': total_finance_categories,
+        'total_deactivated_finance': total_deactivated_finance,
+        'categories': categories,
+        'count_with_data_selected': count_with_data_selected,
+        'total_amount_for_finance': total_amount_for_finance,
+    }
+    return render(request, 'homapp/for_admin/all_finance_for_admin.html', context)
+
+
+@login_required
+@only_admin
+def admin_add_finance(request):
+    finance_for_user = None
+    admin_add_finance_form = AdminAddFinanceForm()
+    if request.method == 'POST':
+        admin_add_finance_form = AdminAddFinanceForm(request.POST, request.FILES)
+        if admin_add_finance_form.is_valid():
+            finance_for_user = admin_add_finance_form.save(commit=False)
+            finance_for_user.save()
+            messages.success(request, f'finance added for {finance_for_user.user.username}')
+            return redirect('homapp:all_finance_for_admin')
+
+
+    context = {
+        'admin_add_finance_form': admin_add_finance_form,
+        'finance_for_user': finance_for_user,
+    }
+    return render(request, 'homapp/for_admin/admin_add_finance.html', context)
+
+
+# For admin to edit any users finance
+@login_required
+@only_admin
+def admin_edit_finance(request, pk):
+    qs = get_object_or_404(Finance, id=pk)
+    admin_edit_finance_form = AdminEditFinanceForm(instance=qs)
+    if request.method == 'POST':
+        admin_edit_finance_form = AdminEditFinanceForm(request.POST, instance=qs)
+        if admin_edit_finance_form.is_valid():
+            get_user = admin_edit_finance_form.save(commit=False)
+            get_user.save()
+            messages.success(request, f'finance for {get_user.user.username} was updated successfully')
+            return redirect('homapp:all_finance_for_admin')
+
+    context = {
+        'qs': qs,
+        'admin_edit_finance_form': admin_edit_finance_form,
+    }
+    return render(request, 'homapp/for_admin/admin_edit_finance.html', context)
+
+
+
+# For admin to delete any user's finance
+@login_required
+@only_admin
+def admin_delete_finance(request, pk):
+    qs = get_object_or_404(Finance, id=pk)
+    if request.method == 'POST':
+        qs.delete()
+        messages.success(request, f'finance for {qs.user.username} was deleted successfully')
+        return redirect('homapp:all_finance_for_admin')
+
+    context = {
+        'qs': qs,
+    }
+    return render(request, 'homapp/for_admin/admin_delete_finance.html', context)
+
+
+
+
+# For admin users to see all Finance categories from all users
+@login_required
+@only_admin
+def all_finance_categories_for_admin(request):
+    count_with_data_selected = None
+
+    all_finance_for_admin = Finance.objects.all()
+    """ i am using values_list and adding flat=True and .distinct() so that i can get only the owners of each category and count them, 
+    remember that a single user can have many categories created by only him/her, so i needed a way to count only those 
+    categories creators only """
+    total_finance_category_owner = FinanceCategory.objects.values_list('category_owner', flat=True).distinct()
+    total_finance_categories = FinanceCategory.objects.all()
+    total_deactivated_finance_categories = FinanceCategory.objects.filter(activate=False)
+
+    # for my filter categories selection
+    categories = FinanceCategory.objects.all()
+
+
+    # getting the names from the form
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    activated = request.GET.get('activated')
+    not_activated = request.GET.get('not_activated')
+    search = request.GET.get('search')
+
+
+    if start_date != '' and start_date != None:
+        total_finance_categories = total_finance_categories.filter(date_created__gte=start_date)
+        count_with_data_selected = total_finance_categories.filter(date_created__gte=start_date)
+
+    
+
+    if end_date != '' and end_date != None:
+        total_finance_categories = total_finance_categories.filter(date_created__lt=end_date)
+        count_with_data_selected = total_finance_categories.filter(date_created__lt=end_date)
+
+
+    
+    if search != '' and search != None: 
+        total_finance_categories = total_finance_categories.filter(category_name__icontains=search)
+        count_with_data_selected = total_finance_categories.filter(category_name__icontains=search)
+
+        
+
+    
+    if activated == 'on':
+        total_finance_categories = total_finance_categories.filter(activate=True)
+        count_with_data_selected = total_finance_categories.filter(activate=True)
+        
+        
+    elif not_activated == 'on':
+        total_finance_categories = total_finance_categories.filter(activate=False)
+        count_with_data_selected = total_finance_categories.filter(activate=False)
+
+    context = {
+        'all_finance_for_admin': all_finance_for_admin,
+        'total_finance_category_owner': total_finance_category_owner,
+        'total_finance_categories': total_finance_categories,
+        'total_deactivated_finance_categories': total_deactivated_finance_categories,
+        'count_with_data_selected': count_with_data_selected,
+        'categories': categories,
+    }
+    return render(request, 'homapp/for_admin/all_finance_categories_for_admin.html', context)
+
+
+# For admin to be able to add finance categories for any user
+@login_required
+@only_admin
+def admin_add_finance_category(request):
+    admin_add_finance_category_form = AdminAddFinanceCategoryForm()
+    if request.method == 'POST':
+        admin_add_finance_category_form = AdminAddFinanceCategoryForm(request.POST)
+        if admin_add_finance_category_form.is_valid():
+            get_user_username = admin_add_finance_category_form.save(commit=False)
+            get_user_username.save()
+            messages.success(request, f'{get_user_username.category_name} category was added successfully for {get_user_username.category_owner.username}')
+            return redirect('homapp:all_finance_categories_for_admin')
+
+    context = {
+        'admin_add_finance_category_form': admin_add_finance_category_form,
+    }
+    return render(request, 'homapp/for_admin/admin_add_finance_category.html', context)
+
+
+
+# For admin to be able to edit finance categories for any user
+@login_required
+@only_admin
+def admin_edit_finance_category(request, pk):
+    qs = get_object_or_404(FinanceCategory, id=pk)
+    admin_edit_finance_category_form = AdminFinanceCategoryEditForm(instance=qs)
+    if request.method == 'POST':
+        admin_edit_finance_category_form = AdminFinanceCategoryEditForm(request.POST, instance=qs)
+        if admin_edit_finance_category_form.is_valid():
+            get_user_username = admin_edit_finance_category_form.save(commit=False)
+            get_user_username.save()
+            messages.success(request, f'{get_user_username.category_name} category was updated successfully for {get_user_username.category_owner.username}')
+            return redirect('homapp:all_finance_categories_for_admin')
+
+    context = {
+        'qs': qs,
+        'admin_edit_finance_category_form': admin_edit_finance_category_form,
+    }
+    return render(request, 'homapp/for_admin/admin_edit_finance_category.html', context)
+
+
+# For admin to be able to delete finance category for any user
+@login_required
+@only_admin
+def admin_delete_finance_category(request, pk):
+    qs = get_object_or_404(FinanceCategory, id=pk)
+    if request.method == 'POST':
+        qs.delete()
+        messages.success(request, f'{qs.category_name} category was deleted successfully for {qs.category_owner.username}')
+        return redirect('homapp:all_finance_categories_for_admin')
+    
+    context = {
+        'qs': qs,
+    }
+    return render(request, 'homapp/for_admin/admin_delete_finance_category.html', context)
+
+
+# For admin users to edit Task for any user
+@login_required
+@only_admin
+def admin_edit_task(request, pk):
+    qs = get_object_or_404(Task, id=pk)
+    admin_edit_task_form = AdminEditTaskForm(instance=qs)
+    if request.method == 'POST':
+        admin_edit_task_form = AdminEditTaskForm(request.POST, instance=qs)
+        if admin_edit_task_form.is_valid():
+            get_user_username = admin_edit_task_form.save(commit=False)
+            get_user_username.save()
+            messages.success(request, f'task saved for {get_user_username.user.username}')
+            return redirect('homapp:admin_list_and_add_task')
+
+    context = {
+        'qs': qs,
+        'admin_edit_task_form': admin_edit_task_form,
+    }
+    return render(request, 'homapp/for_admin/admin_edit_task.html', context)
+
+
+# For admin users to be able to delete task for any user
+@login_required
+@only_admin
+def admin_delete_task(request, pk):
+    qs = get_object_or_404(Task, id=pk)
+    if request.method == 'POST':
+        qs.delete()
+        messages.success(request, f'Task for {qs.user.username} was deleted successfully')
+        return redirect('homapp:admin_list_and_add_task')
+    context = {
+        'qs': qs,
+    }
+    return render(request, 'homapp/for_admin/admin_delete_task.html', context)
+
+
+
+
+# For admin to add wear for any user
+@login_required
+@only_admin
+def admin_add_wear(request):
+    admin_add_wear_form = AdminAddWearForm()  
+    if request.method == 'POST':
+        admin_add_wear_form = AdminAddWearForm(request.POST, request.FILES)
+        if admin_add_wear_form.is_valid():
+            get_username_for_wear = admin_add_wear_form.save(commit=False)
+            get_username_for_wear.save()
+            messages.success(request, f'wear added for {get_username_for_wear.user.username}')
+            return redirect('homapp:all_wears_for_admin')
+
+    
+
+    context = {
+        'admin_add_wear_form': admin_add_wear_form,
+    }
+    return render(request, 'homapp/for_admin/admin_add_wear.html', context)
+
+
+
+# For admin to add task for any user
+@login_required 
+@only_admin
+def admin_list_and_add_task(request):
+    count_task_filtered = None
+    selected_task_category = None
+    
+    all_task = Task.objects.filter(activate=True).order_by( 'complete', 'due')
+
+    # This is to count all users that create a task
+    all_users_that_create_task = Task.objects.values_list('user', flat=True).distinct()
+
+    # This particular database query is for pagination purposes only...
+    # hmm = Task.objects.filter(user_id=request.user.id, activate=True).order_by('complete', 'due')
+
+    # for pagination logic
+    # paginator = Paginator(all_task, 10)
+    # page = request.GET.get('page', 1)
+
+    # try:
+    #     all_task = paginator.page(page)
+    # except PageNotAnInteger:
+    #     all_task = paginator.page(1)
+    # except EmptyPage:
+    #     all_task = paginator.page(paginator.num_pages)
+
+
+
+    admin_add_task_form = AdminAddTaskForm()
+    if request.method == 'POST':
+        admin_add_task_form = AdminAddTaskForm(request.POST)
+        if admin_add_task_form.is_valid():
+            get_task_user_username = admin_add_task_form.save(commit=False)
+            get_task_user_username.save()
+            admin_add_task_form = AdminAddTaskForm()
+            messages.success(request, f'Task added successfully {get_task_user_username.user.username}'.title())
+            return redirect('homapp:admin_list_and_add_task')
+    
+
+    # counting all tasks 
+    all_task_count = Task.objects.filter()
+
+    # Counting all uncompleted Tasks
+    uncompleted_tasks = Task.objects.filter(complete=False).count()
+
+    # counting all completed tasks
+    completed_tasks = Task.objects.filter(complete=True).count()
+
+    # All deactivated tasks
+    deactivated_tasks = Task.objects.filter(activate=False).count()
+
+    # Task categories
+    task_categories = TaskCategory.objects.filter(activate=True)
+
+    category = request.GET.get('category')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    completed = request.GET.get('completed')
+    not_completed = request.GET.get('not_completed')
+    search = request.GET.get('search')
+
+    if category != '' and category != None and category != 'Choose...':
+        all_task = all_task.filter(category_id=category)
+        count_task_filtered = all_task.filter(category_id=category)
+        selected_task_category = get_object_or_404(TaskCategory, id=category)
+    
+    if start_date != '' and start_date != None:
+        all_task = all_task.filter(date_created__gte=start_date)
+        count_task_filtered = all_task.filter(date_created__gte=start_date)
+        
+    
+    if end_date != '' and end_date != None:
+        all_task = all_task.filter(date_created__lt=end_date)
+        count_task_filtered = all_task.filter(date_created__lt=end_date)
+    
+    if search != '' and search != None: 
+        all_task = all_task.filter(name__icontains=search)
+        count_task_filtered = all_task.filter(name__icontains=search)
+    
+    if completed == 'on':
+        all_task = all_task.filter(complete=True)
+        count_task_filtered = all_task.filter(complete=True)
+       
+
+    elif not_completed == 'on':
+        all_task = all_task.filter(complete=False)
+        count_task_filtered = all_task.filter(complete=False)
+        
+
+   
+
+
+
+    context = {
+        'all_task': all_task,
+        'admin_add_task_form': admin_add_task_form,
+        'all_task_count': all_task_count,
+        'uncompleted_tasks': uncompleted_tasks,
+        'completed_tasks': completed_tasks,
+        'deactivated_tasks': deactivated_tasks,
+        'task_categories': task_categories,
+        'count_task_filtered': count_task_filtered,
+        'all_users_that_create_task': all_users_that_create_task,
+    }
+    return render(request, 'homapp/for_admin/admin_list_and_add_task.html', context)
+
+
+
+# For admin to see all task categories from all users
+@login_required
+@only_admin
+def all_task_categories_for_admin(request):
+    count_task_filtered = None
+    selected_task_category = None
+    
+    all_task_category = TaskCategory.objects.all().order_by('-date_created')
+    deactivated_task_categories = TaskCategory.objects.filter(activate=False).order_by('-date_created').count()
+
+    # This is to count all users that create task category, remember a single user can create and have many task so i am going to use values_list for this
+    users_that_create_task_categories = TaskCategory.objects.values_list('user', flat=True).distinct()
+    
+
+    add_task_category_form = TaskCategoryForm()
+
+    if request.method == 'POST':
+        add_task_category_form = TaskCategoryForm(request.POST)
+        if add_task_category_form.is_valid():
+            add_user = add_task_category_form.save(commit=False)
+            add_user.save()
+            add_task_category_form = TaskCategoryForm()
+            messages.success(request, f'Task category was created successfully for {add_user.user.username}'.title())
+            return redirect('homapp:all_task_categories_for_admin')
+    
+
+    
+
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    search = request.GET.get('search')
+    activated = request.GET.get('activated')
+    not_activated = request.GET.get('not_activated')
+
+
+    if start_date != '' and start_date != None:
+        all_task_category = all_task_category.filter(date_created__gte=start_date)
+        count_task_filtered = all_task_category.filter(date_created__gte=start_date)
+        
+    
+    if end_date != '' and end_date != None:
+        all_task_category = all_task_category.filter(date_created__lt=end_date)
+        count_task_filtered = all_task_category.filter(date_created__lt=end_date)
+    
+    if search != '' and search != None: 
+        all_task_category = all_task_category.filter(name__icontains=search)
+        count_task_filtered = all_task_category.filter(name__icontains=search)
+
+    if activated == 'on':
+        all_task_category = all_task_category.filter(activate=True)
+        count_with_data_selected = all_task_category.filter(activate=True)
+        
+        
+    elif not_activated == 'on':
+        all_task_category = all_task_category.filter(activate=False)
+        count_with_data_selected = all_task_category.filter(activate=False)
+    
+    # last added task category
+    last_added_task_category = TaskCategory.objects.filter(activate=True).order_by('-date_created')[:1]
+
+
+    
+    
+
+    context = {
+        'all_task_category': all_task_category,
+        'add_task_category_form': add_task_category_form,
+        'deactivated_task_categories': deactivated_task_categories,
+        'count_task_filtered': count_task_filtered,
+        'last_added_task_category': last_added_task_category,
+        'users_that_create_task_categories': users_that_create_task_categories,
+    }
+    return render(request, 'homapp/for_admin/all_task_categories_for_admin.html', context)
+
+
+
+
+# For admin to edit task categories for any all user selected
+@login_required
+@only_admin
+def admin_edit_task_category(request, pk):
+    count_task_filtered = None
+    selected_task_category = None
+    
+    all_task_category = TaskCategory.objects.all().order_by('-date_created')
+    deactivated_task_categories = TaskCategory.objects.filter(activate=False).order_by('-date_created').count()
+
+    # This is to count all users that create task category, remember a single user can create and have many task so i am going to use values_list for this
+    users_that_create_task_categories = TaskCategory.objects.values_list('user', flat=True).distinct()
+    
+    qs = get_object_or_404(TaskCategory, id=pk)
+    admin_edit_task_category_form = AdminEditTaskCategoryForm(instance=qs)
+
+    if request.method == 'POST':
+        admin_edit_task_category_form = AdminEditTaskCategoryForm(request.POST, instance=qs)
+        if admin_edit_task_category_form.is_valid():
+            get_name = admin_edit_task_category_form.save(commit=False)
+            get_name.save()
+            messages.success(request, f'task category updated successfully for {get_name.user.username}')
+            return redirect('homapp:all_task_categories_for_admin')
+    
+
+    
+
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    search = request.GET.get('search')
+    activated = request.GET.get('activated')
+    not_activated = request.GET.get('not_activated')
+
+
+    if start_date != '' and start_date != None:
+        all_task_category = all_task_category.filter(date_created__gte=start_date)
+        count_task_filtered = all_task_category.filter(date_created__gte=start_date)
+        
+    
+    if end_date != '' and end_date != None:
+        all_task_category = all_task_category.filter(date_created__lt=end_date)
+        count_task_filtered = all_task_category.filter(date_created__lt=end_date)
+    
+    if search != '' and search != None: 
+        all_task_category = all_task_category.filter(name__icontains=search)
+        count_task_filtered = all_task_category.filter(name__icontains=search)
+
+    if activated == 'on':
+        all_task_category = all_task_category.filter(activate=True)
+        count_with_data_selected = all_task_category.filter(activate=True)
+        
+        
+    elif not_activated == 'on':
+        all_task_category = all_task_category.filter(activate=False)
+        count_with_data_selected = all_task_category.filter(activate=False)
+    
+    # last added task category
+    last_added_task_category = TaskCategory.objects.filter(activate=True).order_by('-date_created')[:1]
+
+
+    
+    
+
+    context = {
+        'all_task_category': all_task_category,
+        'admin_edit_task_category_form': admin_edit_task_category_form,
+        'qs': qs,
+        'deactivated_task_categories': deactivated_task_categories,
+        'count_task_filtered': count_task_filtered,
+        'last_added_task_category': last_added_task_category,
+        'users_that_create_task_categories': users_that_create_task_categories,
+    }
+    return render(request, 'homapp/for_admin/admin_edit_task_categories.html', context)
+
+
+# Admin delete task categories on any selected user
+@login_required
+@only_admin
+def admin_delete_task_category(request, pk):
+    qs = get_object_or_404(TaskCategory, id=pk)
+    if request.method == 'POST':
+        qs.delete()
+        messages.success(request, f' Task category was deleted successfully for {qs.user.username}')
+        return redirect('homapp:all_task_categories_for_admin')
+    context = {
+        'qs': qs,
+
+    }
+    return render(request, 'homapp/for_admin/admin_delete_task_category.html', context)
+
+

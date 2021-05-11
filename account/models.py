@@ -29,6 +29,7 @@ class Profile(models.Model):
         return f' profile for {self.user.username}'.title()
     
     # I am using this to overide the save method of this model and to resize my image once it is uploaded.
+
     # def save(self):
     #     super().save()
 

@@ -1,0 +1,146 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Edit Profile
+{% endblock title %}
+
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Add Wear for user</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'homapp:wears_list' %}">Home</a></li>
+              <li class="breadcrumb-item active"><a href="{% url 'profile' %}">Profile</a></li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-12">
+            <!-- jquery validation -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Add any new wear here...</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form role="form" id="quickForm" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-body">
+
+                        <div class="form-group">
+                        {{ admin_add_wear_form.user|as_crispy_field }}
+                        </div>
+
+
+                        <div class="form-group">
+                        <!-- <label for="exampleInputEmail1">Email address</label> -->
+                        {{ admin_add_wear_form.name|as_crispy_field }}
+                        <!-- <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"> -->
+                        </div>
+
+                        <div class="form-group">
+                        <!-- <label for="exampleInputEmail1">First Name</label> -->
+                        {{admin_add_wear_form.description|as_crispy_field }}
+                        <!-- <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email"> -->
+                        </div>
+                  
+        
+                    <div class="form-group">
+                      <!-- <label>Sex</label> -->
+                      <!-- <select class="form-control select2" style="width: 100%;"> -->
+                        {{ admin_add_wear_form.category|as_crispy_field }}
+                      <!-- </select> -->
+                    </div>
+                    <div class="form-group">
+                        <!-- <label>Sex</label> -->
+                        <!-- <select class="form-control select2" style="width: 100%;"> -->
+                          {{ admin_add_wear_form.bought_from|as_crispy_field }}
+                        <!-- </select> -->
+                      </div>
+                      <div class="form-group">
+                        <!-- <label>Sex</label> -->
+                        <!-- <select class="form-control select2" style="width: 100%;"> -->
+                          {{ admin_add_wear_form.amount|as_crispy_field }}
+                        <!-- </select> -->
+                      </div>
+
+                      
+  
+                      <div class="d-flex">
+
+                        <div class="form-group mr-4">
+                          {{ admin_add_wear_form.activate|as_crispy_field }}
+                        </div>
+  
+                        <div class="form-group mr-4">
+                          {{ admin_add_wear_form.expenses|as_crispy_field }}
+                        </div>
+
+                        
+                      </div>
+
+
+  
+                  <div class="form-group">
+                    <!-- <label for="exampleInputFile">Profile Pic</label> -->
+                    <div class="input-group">
+                      <!-- <div class="custom-file"> -->
+                        <!-- <input type="file" class="custom-file-input" id="exampleInputFile"> -->
+                        {{ admin_add_wear_form.photo|as_crispy_field }}
+                        <!-- <label class="custom-file-label" for="exampleInputFile">Current pic:  {{ request.user.profile.profile_pic }}</label> -->
+                        
+                      <!-- </div> -->
+                    </div>
+                    
+                  </div>
+                  <!-- <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  </div> -->
+                  <!-- <div class="form-group mb-0">
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" name="terms" class="custom-control-input" id="exampleCheck1">
+                      <label class="custom-control-label" for="exampleCheck1">I agree to the <a href="#">terms of service</a>.</label>
+                    </div>
+                  </div> -->
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <input type="submit" value="Add wear" class="btn btn-primary">
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+            </div>
+          <!--/.col (left) -->
+          <!-- right column -->
+          <div class="col-md-6">
+
+          </div>
+          <!--/.col (right) -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+ 
+{% endblock content %}

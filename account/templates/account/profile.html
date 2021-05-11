@@ -39,12 +39,14 @@
                     <a href="{{ request.user.profile.profile_pic.url }}">
                       <img class="profile-user-img img-fluid img-circle"
                           src="{{ request.user.profile.profile_pic.url }}"
+                          style="width: 120px; height: 120px;"
                           alt="User profile picture">
                     </a>
                   {% else %}
                     <a href="{% static 'account/dist/img/default.jpeg' %}">
                       <img class="profile-user-img img-fluid img-circle"
                       src="{% static 'account/dist/img/default.jpeg' %}"
+                      style="width: 120px; height: 120px;"
                       alt="User profile picture">
                     </a>
                   {% endif %}

@@ -1,0 +1,126 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Admin add user page
+{% endblock title %}
+
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2 mr-3">
+          <div class="col-sm-6">
+            <h1>Admin Add user</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'homapp:wears_list' %}">Home</a></li>
+              <li class="breadcrumb-item active"><a href="{% url 'profile' %}">Profile</a></li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <!-- left column -->
+            <div class="col-md-11">
+            
+                <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Admin add user</h3>
+                </div>
+                <!-- /.card-header -->
+
+                    <!-- form start -->
+                    <form role="form" id="quickForm" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        {{ admin_add_user_form.username|as_crispy_field }}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        {{ admin_add_user_form.email|as_crispy_field }}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        {{ admin_add_user_form.first_name|as_crispy_field }}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        {{ admin_add_user_form.last_name|as_crispy_field }}
+                                    </div>
+                                </div>
+                                
+                                <!--  -->
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        {{ admin_add_user_form.password|as_crispy_field }}
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        {{ admin_add_user_form.password2|as_crispy_field }}
+                                    </div>
+                                </div>
+
+                                <div class="d-flex">
+
+                                    <div class="form-group mr-4">
+                                      {{ admin_add_user_form.is_active|as_crispy_field }}
+                                    </div>
+              
+                                    <div class="form-group">
+                                      {{ admin_add_user_form.is_superuser|as_crispy_field }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ admin_add_user_form.is_staff|as_crispy_field }}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-7">
+                                    <input type="submit" value="Register" class="btn btn-primary btn-block">
+                            </div>
+
+                        </div>
+                        <!-- /.card-body -->
+                    </form>
+                    <!-- form end -->
+
+                </div> <!-- /.card end -->
+            
+            </div>
+          <!--/.col (left) -->
+          <!-- right column -->
+          <div class="col-md-6">
+            
+          </div>
+          <!--/.col (right) -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock content %}

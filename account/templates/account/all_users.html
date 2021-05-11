@@ -23,7 +23,7 @@
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item">
-                  <a href="">
+                  <a href="{% url 'admin_register_user' %}">
                     <div class="btn btn-primary for_radius">Add User <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
                 </a></li>
               </ol>
@@ -295,7 +295,6 @@
                               <td>{{ forloop.counter }}</td>
                               <td><a href="{% url 'detail_for_admin' user.pk %}">{{ user.username }}</a></td>
                               <td>{{ user.email }}</td>
-
                               {% if user.first_name %}
                                 <td>{{ user.first_name }}</td>
                                 {% else %}

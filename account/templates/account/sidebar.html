@@ -1,6 +1,7 @@
 {% load static %}
 {% load homapp_tags %}
 {% load humanize %}
+{% load active_link_tags %}
 
  <!-- Main Sidebar Container -->
  <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -19,13 +20,13 @@
           {% if request.user.profile.profile_pic %}
           <div class="image">
             <a href="{% url 'profile' %}">
-              <img src="{{ request.user.profile.profile_pic.url }}" class="img-circle elevation-2" alt="User Image">
+              <img src="{{ request.user.profile.profile_pic.url }}" class="img-circle elevation-2" style="width: 50px; height: 50px;" alt="User Image">
             </a>
           </div>
           {% else %}
           <div class="image">
             <a href="{% url 'profile' %}">
-              <img src="{% static 'account/dist/img/default.jpeg' %}" class="img-circle elevation-2" alt="User Image">
+              <img src="{% static 'account/dist/img/default.jpeg' %}" class="img-circle elevation-2" style="width: 50px; height: 50px;" alt="User Image">
             </a>
           </div>
           {% endif %}
@@ -40,21 +41,24 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
-          <li class="nav-item has-treeview menu-open">
+          <li class="nav-item {% active_link  'update_wear' 'active' %} has-treeview menu-open">
             {% url 'homapp:wears_list' as wears_list %}
             {% url 'homapp:deactivated_wears' as deactivated_wears %}
             {% url 'homapp:register_wear' as register_wear %}
             {% url 'homapp:wears_list_by_category' as wears_list_by_category %}
             {% url 'homapp:wear_detail' id=pk as wear_detail %}
             {% url 'homapp:delete_wear' as delete_wear %}
-            {% url 'homapp:update_wear' wear_id=pk as update_wear %}
+           
             {% url 'homapp:add_category' as add_category %}
             {% url 'homapp:category_list' as category_list %}
             {% url 'homapp:edit_category' as edit_category %}
             {% url 'homapp:delete_category' as delete_category %}
             {% url 'homapp:deactivated_category' as deactivated_category %}
 
-            <a href="{{ wears_list }}" class="nav-link {% if request.path == wears_list %} 
+            <a href="{{ wears_list }}" class="nav-link {% if update_wear in request.path %}
+                                                          active
+                                                        {% endif %}
+                                                        {% if request.path == wears_list %} 
                                                           active
                                                         {% endif %}
 
@@ -78,9 +82,7 @@
                                                           active
                                                         {% endif %}
 
-                                                        {% if request.path == update_wear %}
-                                                          active
-                                                        {% endif %}
+                                                       
 
                                                         {% if request.path == add_category %}
                                                           active
@@ -187,10 +189,11 @@
           
             
 
-            <!-- All finance in the sidebar -->
+            <!-- All wear in the sidebar -->
             <li class="nav-item has-treeview menu-open mt-1">
               {% url 'homapp:all_wears_for_admin' as all_wears_for_admin %}
-              <a href="{{ all_wears_for_admin }}" class="nav-link {% if request.path == all_wears_for_admin %} active {% endif %}">
+              {% url 'homapp:all_wears_categories_for_admin' as all_wears_categories_for_admin %}
+              <a href="#" class="nav-link {% if request.path == all_wears_categories_for_admin %} active {% endif %}">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                   Wears section 
@@ -205,14 +208,93 @@
                     <p>All Wears</p>
                   </a>
                 </li>
+
+                <!-- all wears categories -->
+                <li class="nav-item">
+                  {% url 'homapp:all_wears_categories_for_admin' as all_wears_categories_for_admin %}
+                  <a href="{{ all_wears_categories_for_admin }}" class="nav-link {% if request.path == all_wears_categories_for_admin %}active {% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All Wears categories</p>
+                  </a>
+                </li>
+                
+              </ul>
+            </li>
+            <!-- End wear sidebar -->
+
+
+
+            <!-- All finance in the sidebar -->
+            <li class="nav-item has-treeview menu-open mt-1">
+              {% url 'homapp:all_finance_for_admin' as all_finance_for_admin %}
+              {% url 'homapp:all_finance_categories_for_admin' as all_finance_categories_for_admin %}
+              <a href="#" class="nav-link {% if request.path == all_finance_categories_for_admin %} active {% endif %}
+                                          {% if request.path == all_finance_for_admin %} active {% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Finance section 
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  {% url 'homapp:all_finance_for_admin' as all_finance_for_admin %}
+                  <a href="{{ all_finance_for_admin }}" class="nav-link {% if request.path == all_finance_for_admin %}active {% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All Finance</p>
+                  </a>
+                </li>
+
+                <!-- all Finance categories -->
+                <li class="nav-item">
+                  {% url 'homapp:all_finance_categories_for_admin' as all_finance_categories_for_admin %}
+                  <a href="{{ all_finance_categories_for_admin }}" class="nav-link {% if request.path == all_finance_categories_for_admin %}active {% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All finance categories</p>
+                  </a>
+                </li>
                 
               </ul>
             </li>
             <!-- End finance sidebar -->
 
 
+
+
+
             <!-- start Todo in the sidebar -->
-            
+            <li class="nav-item has-treeview menu-open mt-1">
+              {% url 'homapp:admin_list_and_add_task' as admin_list_and_add_task %}
+              {% url 'homapp:all_task_categories_for_admin' as all_task_categories_for_admin %}
+              <!-- {% url 'homapp:all_finance_categories_for_admin' as all_finance_categories_for_admin %} -->
+              <a href="#" class="nav-link {% if request.path == admin_list_and_add_task %} active {% endif %}
+                                          {% if request.path == all_task_categories_for_admin %} active {% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Todo section 
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  {% url 'homapp:admin_list_and_add_task' as admin_list_and_add_task %}
+                  <a href="{{ admin_list_and_add_task }}" class="nav-link {% if request.path == admin_list_and_add_task %}active {% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All Users Task</p>
+                  </a>
+                </li>
+
+                <!-- all Task categories -->
+                <li class="nav-item">
+                  {% url 'homapp:all_task_categories_for_admin' as all_task_categories_for_admin %}
+                  <a href="{{ all_task_categories_for_admin }}" class="nav-link {% if request.path == all_task_categories_for_admin %}active {% endif %}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>All Task categories</p>
+                  </a>
+                </li>
+                
+              </ul>
+            </li>
             <!-- End todo in the sidebar -->
           {% endif %}
 

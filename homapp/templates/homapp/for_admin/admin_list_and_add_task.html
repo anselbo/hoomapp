@@ -13,7 +13,7 @@
 
   <!-- Django Tempus Dominus assets are included in `{{ form.media }}`  -->
 {% block link %}
-  {{ todo_form.media }}
+  {{ admin_add_task_form.media }}
 {% endblock link %}
 
 {% block content %}
@@ -25,7 +25,7 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0 text-dark">{% if selected_category %}{{ selected_category.category_name  }}{% else %} Todo List{% endif %}
+              <h1 class="m-0 text-dark">All Task For Admin
               </h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
@@ -64,9 +64,9 @@
 
                   
                   {% if count_task_filtered %}
-                    <p>Data Selected ( {{ selected_task_category.name }} )</p>
+                    <p>Data Filtered ( {{ selected_task_category.name }} )</p>
                     {% elif count_task_filtered is not None %}
-                      <p>Data Selected ( No Data )</p>
+                      <p>Data Filtered ( No Data )</p>
                     {% else %}
                       <p>All Tasks</p>
                   {% endif %}
@@ -76,7 +76,9 @@
                 <div class="icon">
                 <i class="ion ion-bag"></i>
                 </div>
-                <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-left"></i> More info</a>
+                {% with all_users_that_create_task.count as all_users_that_create_task %}
+                    <a href="#" class="small-box-footer">Total User{{ all_users_that_create_task|pluralize }} that create task{{ all_users_that_create_task|pluralize }}: {{ all_users_that_create_task }}</a>
+                {% endwith %}
             </div>
             </div>
 
@@ -123,7 +125,7 @@
                 <div class="icon">
                 <i class="ion ion-pie-graph"></i>
                 </div>
-                <a href="{% url 'homapp:deactivated_task' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
             </div>
             <!-- ./col -->
@@ -142,8 +144,8 @@
         <div class="card card-primary">
           <div class="card-header">
             <h3 class="card-title">Add Task here...</h3>
-            <a href="{% url 'homapp:list_task_category' %}" class="mt-2">
-              <div class="btn btn-light for_radius float-right">Add Task Category <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+            <a href="{% url 'homapp:all_task_categories_for_admin' %}" class="mt-2">
+              <div class="btn btn-light for_radius float-right">Admin Add Task Category <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
             </a>
           </div>
           <!-- /.card-header -->
@@ -155,32 +157,38 @@
             {% csrf_token %}
             <div class="card-body">
               <div class="row">
-                <div class="col-4">
-                  <div class="form-group">
-                  {{ todo_form.name|as_crispy_field }}
-                  </div>
 
-                  
-                  <div class="form-group">
-                    {{ todo_form.complete|as_crispy_field }}
-                  </div>
-
-                  
-                </div>
-
-                <div class="col-4">
-                  <div class="form-group">
-                      {{ todo_form.due|as_crispy_field }}
+                <div class="col-3">
+                    <div class="form-group">
+                    {{ admin_add_task_form.user|as_crispy_field }}
                     </div>
 
                     <div class="form-group">
-                      {{ todo_form.activate|as_crispy_field }}
+                        {{ admin_add_task_form.complete|as_crispy_field }}
+                    </div>
+
+                </div>
+
+                <div class="col-3">
+                  <div class="form-group">
+                  {{ admin_add_task_form.name|as_crispy_field }}
+                  </div>
+
+                  <div class="form-group">
+                    {{ admin_add_task_form.activate|as_crispy_field }}
+                  </div>
+
+                </div>
+
+                <div class="col-3">
+                    <div class="form-group">
+                      {{ admin_add_task_form.due|as_crispy_field }}
                     </div>
                 </div>
 
-                <div class="col-4">
+                <div class="col-3">
                   <div class="form-group">
-                    {{ todo_form.category|as_crispy_field }}
+                    {{ admin_add_task_form.category|as_crispy_field }}
                   </div>
 
                   <input type="submit" value="Add Task" class="btn btn-primary btn-block">
@@ -188,7 +196,7 @@
 
                 <div class="col-12">
                   <div class="form-group">
-                    {{ todo_form.description|as_crispy_field }}
+                    {{ admin_add_task_form.description|as_crispy_field }}
                   </div>
 
                 </div>
@@ -361,6 +369,7 @@
                       <thead>
                         <tr>
                           <th style="width: 10px">S/N</th>
+                          <th>USERNAME</th>
                           <th>NAME</th>
                           <th>COMPLETED</th>
                           <th>DATE CREATED</th>
@@ -375,11 +384,12 @@
                         {% for t in all_task %}
                               <tr>
                                 <td>{{ forloop.counter }}</td>
+                                <td>{{ t.user.username }}</td>
 
                                 {% if t.is_overdue and t.complete != True %}
-                                  <td><strike><a href="{% url 'homapp:task_detail' t.pk %}">{{ t.name|truncatewords:10 }}</a></strike></p></td>
+                                  <td><strike><a href="">{{ t.name|truncatewords:5 }}</a></strike></p></td>
                                 {% else %}
-                                <td><a href="{% url 'homapp:task_detail' t.pk %}">{{ t.name|truncatewords:10 }}</a></td>
+                                <td><a href="">{{ t.name|truncatewords:5 }}</a></td>
                                 {% endif %}
 
                                 {% if t.complete == True %}
@@ -404,8 +414,8 @@
 
                                 <td>
                                     <div class="d-flex">
-                                      <a href="{% url 'homapp:update_todo_task' t.pk %}"><i class="fas fa-edit mr-3 text-info"></i></a>
-                                      <a href="{% url 'homapp:delete_task' t.pk %}"><i class="far fa-trash-alt text-danger"></i></a>
+                                      <a href="{% url 'homapp:admin_edit_task' t.pk %}"><i class="fas fa-edit mr-3 text-info"></i></a>
+                                      <a href="{% url 'homapp:admin_delete_task' t.pk %}"><i class="far fa-trash-alt text-danger"></i></a>
                                     </div>
                                 </td>
                                 

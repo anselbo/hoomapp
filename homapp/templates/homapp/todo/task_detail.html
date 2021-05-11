@@ -117,12 +117,12 @@
                       <div class="post">
                         <div class="user-block">
                           {% if request.user.profile.profile_pic %}
-                          <img class="img-circle img-bordered-sm" src="{{ request.user.profile.profile_pic.url }}" alt="user image">
+                          <a href="{{request.user.profile.profile_pic.url}}"><img class="img-circle img-bordered-sm" src="{{ request.user.profile.profile_pic.url }}" alt="user image"></a>
                           {% else %}
-                          <img class="img-circle img-bordered-sm" src="{% static 'account/dist/img/default.jpeg' %}" alt="user image">
+                          <a href="{% static 'account/dist/img/default.jpeg' %}"><img class="img-circle img-bordered-sm" src="{% static 'account/dist/img/default.jpeg' %}" alt="user image"></a>
                           {% endif %}
                           <span class="username">
-                            <a href="#">{{ request.user.username }}</a>
+                            <a href="{% url 'profile' %}">{{ request.user.username }}</a>
                           </span>
                           <span class="description">Task created on: {{ qs.date_created }}</span>
   

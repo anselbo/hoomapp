@@ -207,6 +207,53 @@ class ProfileEditForm(forms.ModelForm):
 
 
 
+# Form to let admin add user from admin interface and create any user
+class AdminAddUserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        "class": "form-control",
+        "placeholder": "Password"
+    }))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={
+        "class": "form-control",
+        "placeholder": "Repeat Password"
+    }))
+
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        "class": "form-control",
+        "placeholder": "Username"
+    }))
+
+    email = forms.EmailField(widget=forms.TextInput(attrs={
+        "class": "form-control",
+        "placeholder": "Email"
+    }))
+
+    first_name = forms.CharField(widget=forms.TextInput(attrs={
+        "class": "form-control",
+        "placeholder": "First Name"
+    }))
+
+    last_name = forms.CharField(widget=forms.TextInput(attrs={
+        "class": "form-control",
+        "placeholder": "Last Name"
+    }))
+
+   
+    class Meta:
+        model = User  
+        fields = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_superuser', 'is_staff')
+    
+    
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd['password'] != cd['password2']:
+            raise forms.ValidationError('passwords don\'t match'.title())
+        return cd['password2']
+
+
+
+
+
 class AdminEditUserForm(forms.ModelForm):
     class Meta:
         model = User 

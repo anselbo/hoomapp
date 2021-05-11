@@ -291,7 +291,9 @@ class UpdateTodoForm(forms.ModelForm):
 class TaskCategoryForm(forms.ModelForm):
     class Meta:
         model = TaskCategory 
-        fields = ('name', 'activate')
+        fields = ('user', 'name', 'activate')
+
+        
 
 class UpdateTaskCategoryForm(forms.ModelForm):
     class Meta: 
@@ -299,3 +301,195 @@ class UpdateTaskCategoryForm(forms.ModelForm):
         fields = ('name', 'activate')
 
     
+
+
+
+
+
+
+
+
+# All admin form here 
+
+# For admin to add finance for any user
+class AdminAddFinanceForm(forms.ModelForm):
+    class Meta:
+        model = Finance  
+        fields = ('user', 'title', 'description', 'category', 
+                  'amount', 'activate', 'expenses', 'photo')
+
+    description = forms.CharField(required=False, widget=forms.Textarea(attrs={
+        "class": "form-control",
+        "placeholder": "Add some description",
+        "rows": 3
+    }))
+
+    # This will query all categories that belong to this particular user and push them in this form field (category)
+    # def __init__(self, user, *args, **kwargs):
+    #     super(FinanceAddForm, self).__init__(*args, **kwargs)
+    #     self.fields['category'].queryset = FinanceCategory.objects.filter(category_owner_id=user.id)
+
+
+# For admin to edit finance for any user
+class AdminEditFinanceForm(forms.ModelForm):
+    class Meta:
+        model = Finance  
+        fields = ('user', 'title', 'description', 'category', 
+                  'amount', 'activate', 'expenses', 'photo')
+
+    description = forms.CharField(required=False, widget=forms.Textarea(attrs={
+        "class": "form-control",
+        "placeholder": "Add some description",
+        "rows": 3
+    }))
+
+
+
+# Form For admin to use and add finance category
+class AdminAddFinanceCategoryForm(forms.ModelForm):
+    class Meta: 
+        model = FinanceCategory 
+        fields = ('category_owner', 'category_name', 'activate')
+    
+    category_name = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        "class": "form-control",
+        "placeholder": "Add category name",
+        
+    }))
+
+
+# Form for admin to use and edit finance category
+class AdminFinanceCategoryEditForm(forms.ModelForm):
+    class Meta:
+        model = FinanceCategory  
+        fields = ('category_owner', 'category_name', 'activate')
+
+
+
+
+
+# For admin to add wear for any user
+class AdminAddWearForm(forms.ModelForm):
+    class Meta:
+        model = Wear  
+        fields = ('user', 'name', 'description', 'category', 
+                  'amount', 'photo',  
+                  'bought_from', 'activate', 'expenses')
+
+    description = forms.CharField(required=False, widget=forms.Textarea(attrs={
+        "class": "form-control",
+        "placeholder": "Add some description",
+        "rows": 3
+    }))
+
+
+
+# For admin to edit wear for any user
+class AdminEditWearForm(forms.ModelForm):
+    class Meta:
+        model = Wear  
+        fields = ('user', 'name', 'description', 'category', 
+                  'amount', 'photo',  
+                  'bought_from', 'activate', 'expenses')
+
+    description = forms.CharField(required=False, widget=forms.Textarea(attrs={
+        "class": "form-control",
+        "placeholder": "Add some description",
+        "rows": 3
+    }))
+
+
+
+# Admin add wear categories
+class AdminAddWearCategoryForm(forms.ModelForm):
+    class Meta: 
+        model = WearCategory  
+        fields = ('category_owner', 'category_name', 'activate')
+    
+    category_name = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        "class": "form-control",
+        "placeholder": "Add name",
+        
+    }))
+
+# Admin edit wear category form for any user
+class AdminEditWearCategoryForm(forms.ModelForm):
+    class Meta:
+        model = WearCategory  
+        fields = ('category_owner', 'category_name', 'activate')
+
+
+
+
+
+# For admin to add Task for any user
+class AdminAddTaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ('user', 'name', 'description', 'due', 'category', 'complete', 'activate')
+        # widgets = {
+        #     'due': DateTimeInput()
+           
+        # }
+    
+    description = forms.CharField(required=False, widget=forms.Textarea(attrs={
+        "class": "form-control",
+        "placeholder": "Add some description",
+        "rows": 2,
+    }))
+
+    due = forms.DateTimeField(
+        widget=DateTimePicker(
+            options={
+                'useCurrent': True,
+                'collapse': False,
+            },
+            attrs={
+                'append': 'fa fa-calendar',
+                'icon_toggle': True,
+            }
+        ),
+    )
+
+
+
+# For only admin to use and edit task for any user
+class AdminEditTaskForm(forms.ModelForm): 
+    class Meta:
+        model = Task
+        fields = ('user', 'name', 'description', 'due', 'category', 'complete', 'activate')
+
+        # widgets = {
+        #     'due': DateTimeInput()
+    
+        # }
+    
+    description = forms.CharField(required=False, widget=forms.Textarea(attrs={
+        "class": "form-control",
+        "placeholder": "Add some description",
+        "rows": 2
+    }))
+
+    due = forms.DateTimeField(
+        widget=DateTimePicker(
+            options={
+                'useCurrent': True,
+                'collapse': False,
+            },
+            attrs={
+                'append': 'fa fa-calendar',
+                'icon_toggle': True,
+            }
+        ),
+    )
+
+
+
+# Admin edit task category form
+# For only admin to use and edit task for any user
+class AdminEditTaskCategoryForm(forms.ModelForm): 
+    class Meta:
+        model = TaskCategory
+        fields = ('user', 'name', 'activate')
+
+
