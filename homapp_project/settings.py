@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os 
 from decouple import config
+import django_heroku
+import dj_database_url
+
 
 from pathlib import Path
 
@@ -53,6 +56,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -113,6 +119,8 @@ DATABASES = {
 
     }
 }
+
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 
 
@@ -195,3 +203,10 @@ MESSAGE_TAGS = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'   # I added this as django demand that i specify autofield for it
+
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
+
+# For whitenoise to store static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

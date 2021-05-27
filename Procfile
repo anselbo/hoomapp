@@ -1,0 +1,1 @@
+web: gunicorn homapp_project.wsgi --log-file -
