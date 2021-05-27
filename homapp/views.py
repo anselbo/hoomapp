@@ -1222,22 +1222,22 @@ def today_summary(request):
     all_data_for_today = counting_today_wear_data + counting_today_finance_data
 
     # getting wear total income for today alone
-    wear_total_income_amount_for_today = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__date=today_date).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    wear_total_income_amount_for_today = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__date=today_date).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     wear_total_income_amount_for_today = wear_total_income_amount_for_today.get('xo')
     
     # getting finance total income for today alone 
-    finance_total_income_amount_for_today = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__date=today_date).aggregate(yo=Coalesce(Sum('amount'), V(0)))
+    finance_total_income_amount_for_today = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__date=today_date).aggregate(yo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     finance_total_income_amount_for_today = finance_total_income_amount_for_today.get('yo')
 
     today_total_income = wear_total_income_amount_for_today + finance_total_income_amount_for_today
 
 
     # getting wear total expenses for today alone
-    wear_total_expenses_amount_for_today = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__date=today_date).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    wear_total_expenses_amount_for_today = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__date=today_date).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     wear_total_expenses_amount_for_today = wear_total_expenses_amount_for_today.get('xo')
 
     # getting finance total expenses for today alone 
-    finance_total_expenses_amount_for_today = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__date=today_date).aggregate(yo=Coalesce(Sum('amount'), V(0)))
+    finance_total_expenses_amount_for_today = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__date=today_date).aggregate(yo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     finance_total_expenses_amount_for_today = finance_total_expenses_amount_for_today.get('yo')
 
     today_total_expenses = wear_total_expenses_amount_for_today + finance_total_expenses_amount_for_today
@@ -1246,11 +1246,11 @@ def today_summary(request):
     all_amount_for_today = today_total_income + today_total_expenses
 
     # Today wear total amount
-    today_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__date=today_date).aggregate(ty=Coalesce(Sum('amount'), V(0)))
+    today_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__date=today_date).aggregate(ty=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     today_wear_total_amount = today_wear_total_amount.get('ty')
 
     # Today Finance total amount
-    today_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__date=today_date).aggregate(tp=Coalesce(Sum('amount'), V(0)))
+    today_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__date=today_date).aggregate(tp=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     today_finance_total_amount = today_finance_total_amount.get('tp')
     
     
@@ -1329,11 +1329,11 @@ def last_3_days(request):
     last_3_days_data_count = last_3_days_wear_count + last_3_days_finance_count  
 
     # Last 3 days wear income
-    last_3_days_wear_income = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__range=(last_3_days, today)).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    last_3_days_wear_income = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__range=(last_3_days, today)).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_3_days_wear_income = last_3_days_wear_income.get('xo')
 
     # Last 3 days Finance income
-    last_3_days_finance_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__range=(last_3_days, today)).aggregate(yo=Coalesce(Sum('amount'), V(0)))
+    last_3_days_finance_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__range=(last_3_days, today)).aggregate(yo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_3_days_finance_income = last_3_days_finance_income.get('yo')
 
     # sum all last_3_days income together  last_3_days_finance_count
@@ -1341,11 +1341,11 @@ def last_3_days(request):
 
 
     # last 3 days wear expenses
-    last_3_days_wear_expenses = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__range=(last_3_days, today)).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    last_3_days_wear_expenses = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__range=(last_3_days, today)).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_3_days_wear_expenses = last_3_days_wear_expenses.get('xo')
 
     # last 3 days finance expenses
-    last_3_days_finance_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__range=(last_3_days, today)).aggregate(uo=Coalesce(Sum('amount'), V(0)))
+    last_3_days_finance_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__range=(last_3_days, today)).aggregate(uo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_3_days_finance_expenses = last_3_days_finance_expenses.get('uo')
 
     # sum all last_3_days expenses together  
@@ -1356,11 +1356,11 @@ def last_3_days(request):
     total_amount_for_last_3_days = sum_last_3_days_income + sum_last_3_days_expenses
 
     # last 3 days wear total Amount 
-    last_3_days_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__range=(last_3_days, today)).aggregate(ro=Coalesce(Sum('amount'), V(0)))
+    last_3_days_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__range=(last_3_days, today)).aggregate(ro=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_3_days_wear_total_amount = last_3_days_wear_total_amount.get('ro')
 
     # last 3 days finance total Amount 
-    last_3_days_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__range=(last_3_days, today)).aggregate(ra=Coalesce(Sum('amount'), V(0)))
+    last_3_days_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__range=(last_3_days, today)).aggregate(ra=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_3_days_finance_total_amount = last_3_days_finance_total_amount.get('ra')
 
 
@@ -1444,11 +1444,11 @@ def last_7_days(request):
     last_7_days_data_count = last_7_days_wear_count + last_7_days_finance_count  
 
     # Last 7 days wear income
-    last_7_days_wear_income = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__range=(last_7_days, today)).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    last_7_days_wear_income = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__range=(last_7_days, today)).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_7_days_wear_income = last_7_days_wear_income.get('xo')
 
     # Last 7 days Finance income
-    last_7_days_finance_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__range=(last_7_days, today)).aggregate(yo=Coalesce(Sum('amount'), V(0)))
+    last_7_days_finance_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__range=(last_7_days, today)).aggregate(yo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_7_days_finance_income = last_7_days_finance_income.get('yo')
 
     # sum all last_7_days income together  last_3_days_finance_count
@@ -1456,11 +1456,11 @@ def last_7_days(request):
 
 
     # last 7 days wear expenses
-    last_7_days_wear_expenses = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__range=(last_7_days, today)).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    last_7_days_wear_expenses = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__range=(last_7_days, today)).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_7_days_wear_expenses = last_7_days_wear_expenses.get('xo')
 
     # last 7 days finance expenses
-    last_7_days_finance_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__range=(last_7_days, today)).aggregate(uo=Coalesce(Sum('amount'), V(0)))
+    last_7_days_finance_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__range=(last_7_days, today)).aggregate(uo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_7_days_finance_expenses = last_7_days_finance_expenses.get('uo')
 
     # sum all last_7_days expenses together  
@@ -1471,12 +1471,12 @@ def last_7_days(request):
     total_amount_for_last_7_days = sum_last_7_days_income + sum_last_7_days_expenses
 
     # Last 7 days wear total amount
-    last_7_days_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__range=(last_7_days, today)).aggregate(ho=Coalesce(Sum('amount'), V(0)))
+    last_7_days_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__range=(last_7_days, today)).aggregate(ho=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_7_days_wear_total_amount = last_7_days_wear_total_amount.get('ho')
 
 
     # Last 7 days finance total amount
-    last_7_days_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__range=(last_7_days, today)).aggregate(zo=Coalesce(Sum('amount'), V(0)))
+    last_7_days_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__range=(last_7_days, today)).aggregate(zo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     last_7_days_finance_total_amount = last_7_days_finance_total_amount.get('zo')
 
 
@@ -1574,11 +1574,11 @@ def current_week(request):
 
 
     # current week wear income
-    current_week_wear_income = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__week=current_week).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    current_week_wear_income = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__week=current_week).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_week_wear_income = current_week_wear_income.get('xo')
 
     # current week Finance income
-    current_week_finance_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__week=current_week).aggregate(yo=Coalesce(Sum('amount'), V(0)))
+    current_week_finance_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__week=current_week).aggregate(yo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_week_finance_income = current_week_finance_income.get('yo')
 
     # sum all current week income together and all current week finance_count
@@ -1587,11 +1587,11 @@ def current_week(request):
 
 
     # current week wear expenses
-    current_week_wear_expenses = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__week=current_week).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    current_week_wear_expenses = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__week=current_week).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_week_wear_expenses = current_week_wear_expenses.get('xo')
 
     # current week finance expenses
-    current_week_finance_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__week=current_week).aggregate(uo=Coalesce(Sum('amount'), V(0)))
+    current_week_finance_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__week=current_week).aggregate(uo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_week_finance_expenses = current_week_finance_expenses.get('uo')
 
     # sum all current week expenses together  
@@ -1603,12 +1603,12 @@ def current_week(request):
     total_amount_for_current_week = sum_current_week_income + sum_current_week_expenses
 
     # This current week wear total amount
-    current_week_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__week=current_week).aggregate(ho=Coalesce(Sum('amount'), V(0)))
+    current_week_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__week=current_week).aggregate(ho=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_week_wear_total_amount = current_week_wear_total_amount.get('ho')
 
 
     # This current week finance total amount
-    current_week_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__week=current_week).aggregate(zo=Coalesce(Sum('amount'), V(0)))
+    current_week_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__week=current_week).aggregate(zo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_week_finance_total_amount = current_week_finance_total_amount.get('zo')
 
 
@@ -1704,11 +1704,11 @@ def current_month(request):
 
 
     # Last 7 days wear income
-    current_month_wear_income = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__month=current_month).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    current_month_wear_income = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__month=current_month).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_month_wear_income = current_month_wear_income.get('xo')
 
     # Last 7 days Finance income
-    current_month_finance_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__month=current_month).aggregate(yo=Coalesce(Sum('amount'), V(0)))
+    current_month_finance_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__month=current_month).aggregate(yo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_month_finance_income = current_month_finance_income.get('yo')
 
     # sum all last_7_days income together  last_3_days_finance_count
@@ -1717,11 +1717,11 @@ def current_month(request):
 
 
     # last 7 days wear expenses
-    current_month_wear_expenses = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__month=current_month).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    current_month_wear_expenses = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__month=current_month).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_month_wear_expenses = current_month_wear_expenses.get('xo')
 
     # last 7 days finance expenses
-    current_month_finance_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__month=current_month).aggregate(uo=Coalesce(Sum('amount'), V(0)))
+    current_month_finance_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__month=current_month).aggregate(uo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_month_finance_expenses = current_month_finance_expenses.get('uo')
 
     # sum all last_7_days expenses together  
@@ -1733,12 +1733,12 @@ def current_month(request):
     total_amount_for_current_month = sum_current_month_income + sum_current_month_expenses
 
     # This month wear total amount
-    current_month_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__month=current_month).aggregate(ho=Coalesce(Sum('amount'), V(0)))
+    current_month_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__month=current_month).aggregate(ho=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_month_wear_total_amount = current_month_wear_total_amount.get('ho')
 
 
     # This month finance total amount
-    current_month_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__month=current_month).aggregate(zo=Coalesce(Sum('amount'), V(0)))
+    current_month_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__month=current_month).aggregate(zo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_month_finance_total_amount = current_month_finance_total_amount.get('zo')
 
 
@@ -1835,11 +1835,11 @@ def current_year(request):
 
 
     # this year wear income
-    current_year_wear_income = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__year=current_year).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    current_year_wear_income = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__year=current_year).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_year_wear_income = current_year_wear_income.get('xo')
 
     # this year Finance income
-    current_year_finance_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__year=current_year).aggregate(yo=Coalesce(Sum('amount'), V(0)))
+    current_year_finance_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False, date_created__year=current_year).aggregate(yo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_year_finance_income = current_year_finance_income.get('yo')
 
     # sum all this year income together  last_3_days_finance_count
@@ -1848,11 +1848,11 @@ def current_year(request):
 
 
     # this year wear expenses
-    current_year_wear_expenses = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__year=current_year).aggregate(xo=Coalesce(Sum('amount'), V(0)))
+    current_year_wear_expenses = Wear.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__year=current_year).aggregate(xo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_year_wear_expenses = current_year_wear_expenses.get('xo')
 
     # this year finance expenses
-    current_year_finance_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__year=current_year).aggregate(uo=Coalesce(Sum('amount'), V(0)))
+    current_year_finance_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True, date_created__year=current_year).aggregate(uo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_year_finance_expenses = current_year_finance_expenses.get('uo')
 
     # sum all this year expenses together  
@@ -1864,12 +1864,12 @@ def current_year(request):
     total_amount_for_current_year = sum_current_year_income + sum_current_year_expenses
 
     # This year wear total amount
-    current_year_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__year=current_year).aggregate(ho=Coalesce(Sum('amount'), V(0)))
+    current_year_wear_total_amount = Wear.objects.filter(user_id=request.user.id, activate=True, date_created__year=current_year).aggregate(ho=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_year_wear_total_amount = current_year_wear_total_amount.get('ho')
 
 
     # This year finance total amount
-    current_year_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__year=current_year).aggregate(zo=Coalesce(Sum('amount'), V(0)))
+    current_year_finance_total_amount = Finance.objects.filter(user_id=request.user.id, activate=True, date_created__year=current_year).aggregate(zo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     current_year_finance_total_amount = current_year_finance_total_amount.get('zo')
 
 
