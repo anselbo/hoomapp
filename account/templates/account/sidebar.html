@@ -41,13 +41,14 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
-          <li class="nav-item {% active_link  'update_wear' 'active' %} has-treeview menu-open">
+          <li class="nav-item  has-treeview menu-open">
             {% url 'homapp:wears_list' as wears_list %}
             {% url 'homapp:deactivated_wears' as deactivated_wears %}
             {% url 'homapp:register_wear' as register_wear %}
             {% url 'homapp:wears_list_by_category' as wears_list_by_category %}
             {% url 'homapp:wear_detail' id=pk as wear_detail %}
             {% url 'homapp:delete_wear' as delete_wear %}
+            {% url 'homapp:update_wear' wear_id=id as update_wearr %}
            
             {% url 'homapp:add_category' as add_category %}
             {% url 'homapp:category_list' as category_list %}
@@ -55,9 +56,10 @@
             {% url 'homapp:delete_category' as delete_category %}
             {% url 'homapp:deactivated_category' as deactivated_category %}
 
-            <a href="{{ wears_list }}" class="nav-link {% if update_wear in request.path %}
+            <a href="{{ wears_list }}" class="nav-link {% if request.path == update_wearr %}
                                                           active
                                                         {% endif %}
+
                                                         {% if request.path == wears_list %} 
                                                           active
                                                         {% endif %}
@@ -103,7 +105,7 @@
                                                         {% if request.path == deactivated_category %}
                                                           active
                                                         {% endif %}">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="fas fa-tshirt"></i>
               <p>
                 My Wears
               </p>
@@ -143,7 +145,7 @@
                                                           {% elif request.path == all_transactions %}
                                                             active
                                                           {% endif %}">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
+                                                          <i class="fas fa-coins"></i>
               <p>
                 My Finance
               </p>
@@ -162,7 +164,7 @@
               {% elif request.path == list_task_category %}
               active
               {% endif %}">                                      <!--active-->
-                <i class="nav-icon fas fa-tachometer-alt"></i>
+              <i class="fas fa-list-ol"></i>
                 <p>
                   My Todo List
                   <span class="right badge badge-danger">{{ uncompleted_tasks|intcomma }}</span>
@@ -178,7 +180,7 @@
               <a href="{{ all_users }}" class="nav-link {% if request.path == all_users %} active 
               {% endif %}">    
                                                 <!--active-->
-                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                                <i class="fas fa-users"></i>
                 <p>
                   All Users
                   <!-- <span class="right badge badge-danger">{{ uncompleted_tasks|intcomma }}</span> -->
@@ -204,7 +206,7 @@
                 <li class="nav-item">
                   {% url 'homapp:all_wears_for_admin' as all_wears_for_admin %}
                   <a href="{{ all_wears_for_admin }}" class="nav-link {% if request.path == all_wears_for_admin %}active {% endif %}">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="fas fa-tshirt text-primary"></i>
                     <p>All Wears</p>
                   </a>
                 </li>
@@ -213,7 +215,7 @@
                 <li class="nav-item">
                   {% url 'homapp:all_wears_categories_for_admin' as all_wears_categories_for_admin %}
                   <a href="{{ all_wears_categories_for_admin }}" class="nav-link {% if request.path == all_wears_categories_for_admin %}active {% endif %}">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="fas fa-spray-can"></i>
                     <p>All Wears categories</p>
                   </a>
                 </li>
@@ -230,7 +232,7 @@
               {% url 'homapp:all_finance_categories_for_admin' as all_finance_categories_for_admin %}
               <a href="#" class="nav-link {% if request.path == all_finance_categories_for_admin %} active {% endif %}
                                           {% if request.path == all_finance_for_admin %} active {% endif %}">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                          <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                   Finance section 
                   <i class="right fas fa-angle-left"></i>
@@ -240,7 +242,7 @@
                 <li class="nav-item">
                   {% url 'homapp:all_finance_for_admin' as all_finance_for_admin %}
                   <a href="{{ all_finance_for_admin }}" class="nav-link {% if request.path == all_finance_for_admin %}active {% endif %}">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="fas fa-coins text-primary"></i>
                     <p>All Finance</p>
                   </a>
                 </li>
@@ -269,7 +271,7 @@
               <!-- {% url 'homapp:all_finance_categories_for_admin' as all_finance_categories_for_admin %} -->
               <a href="#" class="nav-link {% if request.path == admin_list_and_add_task %} active {% endif %}
                                           {% if request.path == all_task_categories_for_admin %} active {% endif %}">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                          <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                   Todo section 
                   <i class="right fas fa-angle-left"></i>
@@ -279,7 +281,7 @@
                 <li class="nav-item">
                   {% url 'homapp:admin_list_and_add_task' as admin_list_and_add_task %}
                   <a href="{{ admin_list_and_add_task }}" class="nav-link {% if request.path == admin_list_and_add_task %}active {% endif %}">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="fas fa-list-ol text-primary"></i>
                     <p>All Users Task</p>
                   </a>
                 </li>
@@ -288,7 +290,7 @@
                 <li class="nav-item">
                   {% url 'homapp:all_task_categories_for_admin' as all_task_categories_for_admin %}
                   <a href="{{ all_task_categories_for_admin }}" class="nav-link {% if request.path == all_task_categories_for_admin %}active {% endif %}">
-                    <i class="far fa-circle nav-icon"></i>
+                    <i class="fas fa-cloud-rain"></i>
                     <p>All Task categories</p>
                   </a>
                 </li>

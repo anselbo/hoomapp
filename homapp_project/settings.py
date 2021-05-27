@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os 
+from decouple import config
 
 from pathlib import Path
 
@@ -21,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '_^vkqd3ilfc_1*ix8=v8(8qmxbu-5^l=w$ds&+7$bdv3)xk#d_'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -104,10 +105,10 @@ WSGI_APPLICATION = 'homapp_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'homapp',
-        'USER':'ansel',
-        'PASSWORD':'ilovemymum22',
-        'HOST':'localhost',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
         'PORT': '5432',
 
     }
@@ -168,21 +169,18 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 
-LOGIN_REDIRECT_URL = 'wears_list'
+LOGIN_REDIRECT_URL = 'homapp:list_task'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
 # for SMTP 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True  
-EMAIL_HOST_USER = 'bsolomon240@gmail.com'
-EMAIL_HOST_PASSWORD = 'ilovemymum55@$'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')  
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
-
-#bsolomon240
-#ilovemymum55@$
 
 
 # This is to help change message tags since bootstrap dosen't have error alert class instead it have danger
@@ -195,3 +193,5 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

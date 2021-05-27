@@ -35,7 +35,7 @@ def wear_list(request, song_cat=None, wear_category_id=None):
     last_added_wear = Wear.objects.filter(user_id=request.user.id, activate=True)[:1]
     deactivated_wearss = Wear.objects.filter(user_id=request.user.id, activate=False).count()
 
-    sum_all_n_wears = Wear.objects.filter(user_id=request.user.id, activate=True).aggregate(a=Coalesce(Sum('amount'), V(0))) # To sum all wears..
+    sum_all_n_wears = Wear.objects.filter(user_id=request.user.id, activate=True).aggregate(a=Coalesce(Sum('amount'), V(0), output_field=DecimalField())) # To sum all wears..
     sum_all_n_wears = sum_all_n_wears.get('a')
 
     # getting the names from the form
@@ -79,12 +79,12 @@ def wear_list(request, song_cat=None, wear_category_id=None):
         s_with_cat = s_with_cat.get('con')
     
     if search != '' and search != None: 
-        qs = qs.filter(name__icontains=search)
-        count_with_data_selected = qs.filter(name__icontains=search)
+        qs = qs.filter(Q(name__icontains=search) | Q(amount__icontains=search) | Q(bought_from__icontains=search))
+        count_with_data_selected = qs.filter(Q(name__icontains=search) | Q(amount__icontains=search) | Q(bought_from__icontains=search))
 
         # summing amount based on the word search on
-        selected_category = qs.filter(name__icontains=search)
-        s_with_cat = qs.filter(name__icontains=search).aggregate(ho=Coalesce(Sum('amount'), V(0)))
+        selected_category = qs.filter(Q(name__icontains=search) | Q(amount__icontains=search) | Q(bought_from__icontains=search))
+        s_with_cat = qs.filter(Q(name__icontains=search) | Q(amount__icontains=search) | Q(bought_from__icontains=search)).aggregate(ho=Coalesce(Sum('amount'), V(0)))
         s_with_cat = s_with_cat.get('ho')
     
     if expenses == 'on':
@@ -361,10 +361,10 @@ def add_wear(request):
 
 
 @login_required
-def update_wear(request, pk):
+def update_wear(request, wear_id):
     cati = WearCategory.objects.all().filter(activate=True).count()
     all_wears = Wear.objects.filter(activate=True).count()
-    queryset = get_object_or_404(Wear, id=pk,)
+    queryset = get_object_or_404(Wear, id=wear_id,)
     # queryset = Wear.objects.get(id=id) 
     form = WearEditForm(request.user, instance=queryset)
     if request.method == 'POST':
@@ -374,7 +374,7 @@ def update_wear(request, pk):
             updated_wear.user_id = request.user.id
             updated_wear.save()
             messages.success(request, f'{ updated_wear.name } was updated successfully by { request.user }'.title())
-            return redirect('homapp:wears_list')
+            return redirect('homapp:wears_list' +wear_id)
     context = {
         'updated_wear': queryset,   
         'form': form,
@@ -563,7 +563,7 @@ def finance_list(request):
 
         # Suming amount based on the category selected
         selected_category = get_object_or_404(FinanceCategory, id=category)
-        s_with_cat = finances.filter(category_id=category).aggregate(ba=Coalesce(Sum('amount'), V(0))) # This will sum based on the category selected
+        s_with_cat = finances.filter(category_id=category).aggregate(ba=Coalesce(Sum('amount'), V(0), output_field=DecimalField())) # This will sum based on the category selected
         s_with_cat = s_with_cat.get('ba')
 
        
@@ -574,7 +574,7 @@ def finance_list(request):
 
         # Suming amount based on only the start date selected
         selected_category = finances.filter(date_created__gte=start_date)
-        s_with_cat = finances.filter(date_created__gte=start_date).aggregate(baa=Coalesce(Sum('amount'), V(0))) # This will sum based on the category selected
+        s_with_cat = finances.filter(date_created__gte=start_date).aggregate(baa=Coalesce(Sum('amount'), V(0), output_field=DecimalField())) # This will sum based on the category selected
         s_with_cat = s_with_cat.get('baa')
         
 
@@ -584,7 +584,7 @@ def finance_list(request):
 
         # Suming amount based on only the end date selected
         selected_category = finances.filter(date_created__lt=end_date)
-        s_with_cat = finances.filter(date_created__lt=end_date).aggregate(con=Coalesce(Sum('amount'), V(0)))
+        s_with_cat = finances.filter(date_created__lt=end_date).aggregate(con=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
         s_with_cat = s_with_cat.get('con')
 
 
@@ -594,7 +594,7 @@ def finance_list(request):
 
         # summing amount based on the word search on
         selected_category = finances.filter(title__icontains=search)
-        s_with_cat = finances.filter(title__icontains=search).aggregate(hjo=Coalesce(Sum('amount'), V(0)))
+        s_with_cat = finances.filter(title__icontains=search).aggregate(hjo=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
         s_with_cat = s_with_cat.get('hjo')
     
 
@@ -605,7 +605,7 @@ def finance_list(request):
         
         # summing amount based on the expenses activated
         selected_category = finances.filter(expenses=True)
-        s_with_cat = finances.filter(expenses=True).aggregate(ton=Coalesce(Sum('amount'), V(0)))
+        s_with_cat = finances.filter(expenses=True).aggregate(ton=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
         s_with_cat = s_with_cat.get('ton')
 
     elif not_expenses == 'on':
@@ -615,7 +615,7 @@ def finance_list(request):
         
         # summing amount based on the expenses activated
         selected_category = finances.filter(expenses=False)
-        s_with_cat = finances.filter(expenses=False).aggregate(tah=Coalesce(Sum('amount'), V(0)))
+        s_with_cat = finances.filter(expenses=False).aggregate(tah=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
         s_with_cat = s_with_cat.get('tah')
 
 
@@ -629,10 +629,10 @@ def finance_list(request):
             count_with_category = finances.filter(category_id=category) # This will count the category based on what is passed in..
             selected_category = get_object_or_404(FinanceCategory, id=category)  # i grab the value of the category selected above and push it in for category table using the id and from here, i can access all the atribute of the wearcategory table
 
-            s_with_cat = finances.filter(category_id=category).aggregate(hu=Coalesce(Sum('amount'), V(0))) # This will sum based on the category selected
+            s_with_cat = finances.filter(category_id=category).aggregate(hu=Coalesce(Sum('amount'), V(0), output_field=DecimalField())) # This will sum based on the category selected
             s_with_cat = s_with_cat.get('hu')
 
-    sum_all_finances = Finance.objects.filter(user_id=request.user.id, activate=True).aggregate(oga=Coalesce(Sum('amount'), V(0))) # This is to sum all the Finance
+    sum_all_finances = Finance.objects.filter(user_id=request.user.id, activate=True).aggregate(oga=Coalesce(Sum('amount'), V(0), output_field=DecimalField())) # This is to sum all the Finance
     sum_all_finances = sum_all_finances.get('oga') # This is to get the dict key and used this key to display everything
 
 
@@ -1021,13 +1021,13 @@ def all_transactions(request):
     all_fin_categories = FinanceCategory.objects.filter(category_owner_id=request.user.id, activate=True)
 
 
-    sum_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True).aggregate(x=Coalesce(Sum('amount'), V(0)))
+    sum_expenses = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=True).aggregate(x=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     sum_expenses = sum_expenses.get('x')
 
-    sum_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False).aggregate(y=Coalesce(Sum('amount'), V(0)))
+    sum_income = Finance.objects.filter(user_id=request.user.id, activate=True, expenses=False).aggregate(y=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     sum_income = sum_income.get('y')
 
-    sum_all_finances = Finance.objects.filter(user_id=request.user.id, activate=True).aggregate(z=Coalesce(Sum('amount'), V(0))) # This is to sum all the Finance
+    sum_all_finances = Finance.objects.filter(user_id=request.user.id, activate=True).aggregate(z=Coalesce(Sum('amount'), V(0), output_field=DecimalField())) # This is to sum all the Finance
     sum_all_finances = sum_all_finances.get('z') # This is to get the dict key and used this key to display everything
 
 
@@ -1144,12 +1144,12 @@ def all_transactions(request):
 
 
     # I sum the total amount in wear table......
-    wear_total_amount = Wear.objects.aggregate(g=Coalesce(Sum('amount'), V(0)))
+    wear_total_amount = Wear.objects.aggregate(g=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     wear_total_amount = wear_total_amount.get('g')
 
 
     # I sum the total amount in finance table here......
-    finance_total_amount = Finance.objects.aggregate(w=Coalesce(Sum('amount'), V(0)))
+    finance_total_amount = Finance.objects.aggregate(w=Coalesce(Sum('amount'), V(0), output_field=DecimalField()))
     finance_total_amount = finance_total_amount.get('w')
 
     # I now add two of them together to obtain the grand total...
