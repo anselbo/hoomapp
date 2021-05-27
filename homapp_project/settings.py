@@ -194,4 +194,4 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'   # I added this as django demand that i specify autofield for it
