@@ -191,7 +191,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 
-LOGIN_REDIRECT_URL = 'homapp:list_task'
+LOGIN_REDIRECT_URL = 'homapp:wears_list'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 

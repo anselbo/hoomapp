@@ -43,7 +43,7 @@ def user_login(request):
                 if user.is_active:
                     login(request, user)
                     messages.success(request, f'welcome {user.username}')
-                    return redirect('homapp:list_task')
+                    return redirect('homapp:wears_list')
         messages.error(request, 'invalid username or password, username do not match with password registered'.title())
     else:
         form = LoginForm()
