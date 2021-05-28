@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os 
 from decouple import config
-import django_heroku
+
 import dj_database_url
 
 
@@ -124,6 +124,10 @@ DATABASES = {
 
 
 
+# Activate Django-Heroku.
+# import django_heroku
+# django_heroku.settings(locals())
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -210,8 +214,7 @@ MESSAGE_TAGS = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'   # I added this as django demand that i specify autofield for it
 
 
-# Activate Django-Heroku.
-django_heroku.settings(locals())
+
 
 # For whitenoise to store static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
