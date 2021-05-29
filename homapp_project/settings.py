@@ -220,5 +220,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'   # I added this as django dem
 
 
 
-# For whitenoise to store static files
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
