@@ -20,7 +20,7 @@
               <h1 class="m-0 text-dark">{% if selected_category %}{{ selected_category.category_name  }}{% else %} Wears {% endif %}
               </h1>
             </div><!-- /.col -->
-            <div class="col-6 col-sm-6">
+            <div class="col-6 col-sm-6 float-right">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item">
                   <a href="{% url 'homapp:register_wear' %}">
@@ -173,7 +173,7 @@
               </div>
 
 
-              <div class="col-6 col-sm-6 col-lg-7 mt-3">
+              <div class="col-12 col-sm-6 col-lg-7 mt-3">
                 <div class="d-flex">
                   <div class="form-check mr-4">
                     <input class="form-check-input" name="expenses" type="checkbox" value="on" id="defaultCheck1">
@@ -196,7 +196,7 @@
               </div>
 
               
-              <div class="col-6 col-sm-6 col-lg-5 mt-3">
+              <div class="col-12 col-sm-6 col-lg-5 mt-3">
                 <button class="btn btn-secondary mt-0 ml-5 float-right btn-block btn-sm" type="submit">Search</button>
               </div>
               
