@@ -16,15 +16,15 @@
      <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
-            <div class="col-sm-6">
+            <div class="col-6 col-sm-6">
               <h1 class="m-0 text-dark">{% if selected_category %}{{ selected_category.category_name  }}{% else %} All Finances {% endif %}
               </h1>
             </div><!-- /.col -->
-            <div class="col-sm-6">
+            <div class="col-6 col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item">
                   <a href="{% url 'homapp:add_finance' %}">
-                    <div class="btn btn-primary for_radius">Add Finance <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+                    <div class="btn btn-primary for_radius btn-sm ooo"><i class="fas fa-plus-circle fa-lg ml-1"></i> Finance</div>
                 </a></li>
               </ol>
             </div><!-- /.col -->
@@ -132,27 +132,52 @@
 </section>
 
        <!-- for my form -->
-       <form action="." method="get">
-        <div class="row">
-            <div class="col-3 ml-3 mb-2">
-              <div class="form-group">
-                <label>Categories</label>
-                <select class="form-control" name="category">
-                  <option>Choose...</option>
-                  {% for cat in all_fin_categories %}
-                  <option value="{{ cat.id }}">{{ cat }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-      
-                <div class="d-flex">
+      <div class="content">
+        <div class="container-fluid">
+          <div class="card">
+            <form action="." method="get">
+            <div class="row m-3">
+                <div class="col-6 col-sm-6 col-lg-4 mb-2">
+                  <div class="form-group">
+                    <label>Categories</label>
+                    <select class="form-control" name="category">
+                      <option>Choose...</option>
+                      {% for cat in all_fin_categories %}
+                      <option value="{{ cat.id }}">{{ cat }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+          
+                    
+                </div>
+          
+                <div class="col-6 col-sm-6 col-lg-4">
+                  <label>Start Date</label>
+                  <input type="date"  class="form-control" name="start_date">
+                </div>
+          
+                <div class="col-6 col-sm-6 col-lg-4">
+                  <label>End Date</label>
+                  <input type="date" class="form-control mb-2" name="end_date">
+                </div>
+
+                  <!-- search form -->
+                <div class="col-6 col-sm-6 col-lg-12">
+                  <label >Search</label>
+                  <div class="input-group input-group-md">
+                    <input class="form-control form-control" type="search" name="search" placeholder="By Finance name or amount " aria-label="Search">
+                  </div>
+                </div>
+
+                <div class="col-6 col-sm-6 col-lg-7 mt-3">
+                  <div class="d-flex">
                     <div class="form-check mr-4">
                       <input class="form-check-input" name="expenses" type="checkbox" value="on" id="defaultCheck1">
                       <label class="form-check-label" for="expenses">
                         Expenses
                       </label>
                     </div>
-                 
+                
                   
                 
                     <div class="form-check">
@@ -162,35 +187,22 @@
                       </label>
                     </div>
 
+                  </div>
                 </div>
-            </div>
-      
-            <div class="col-3">
-              <label>Start Date</label>
-              <input type="date"  class="form-control" name="start_date">
-            </div>
-      
-            <div class="col-4">
-              <label>End Date</label>
-              <input type="date" class="form-control mb-2" name="end_date">
+                
 
-              <!-- search form -->
-              <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" name="search" placeholder="Search Finance" aria-label="Search">
-              </div>
-
+                
+          
+                
+          
+                  <div class="col-6 col-sm-6 col-lg-5 mt-3">
+                    <button class="btn btn-secondary mt-0 ml-5 float-right btn-block btn-sm" type="submit">Search</button>
+                  </div>
             </div>
-      
-            
-      
-              <div class="input-group-append">
-                <button class="btn btn-navbar mb-3" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
+            </form> 
+          </div>
         </div>
-      </form> 
-
+      </div>
       
 
       <div class="content">

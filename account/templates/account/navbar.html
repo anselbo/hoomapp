@@ -21,6 +21,10 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
 
+      <li class="nav-item d-lg-none d-sm-inline-block" style="margin-left: 20px; font-weight: bold;">
+        <a href="#" class="nav-link">HomApp</a>
+      </li>
+
       {% if request.user.is_staff == True and request.user.is_superuser == True %}
         <li class="nav-item d-none d-sm-inline-block">
           {% url 'all_users' as all_users %}
