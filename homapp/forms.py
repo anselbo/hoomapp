@@ -223,10 +223,10 @@ class TodoForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ('name', 'description', 'due', 'category', 'complete', 'activate')
-        # widgets = {
-        #     'due': DateTimeInput()
+        widgets = {
+            'due': DateTimeInput()
            
-        # }
+        }
     
     description = forms.CharField(required=False, widget=forms.Textarea(attrs={
         "class": "form-control",
@@ -234,18 +234,18 @@ class TodoForm(forms.ModelForm):
         "rows": 2,
     }))
 
-    due = forms.DateTimeField(
-        widget=DateTimePicker(
-            options={
-                'useCurrent': True,
-                'collapse': False,
-            },
-            attrs={
-                'append': 'fa fa-calendar',
-                'icon_toggle': True,
-            }
-        ),
-    )
+    # due = forms.DateTimeField(
+    #     widget=DateTimePicker(
+    #         options={
+    #             'useCurrent': True,
+    #             'collapse': False,
+    #         },
+    #         attrs={
+    #             'append': 'fa fa-calendar',
+    #             'icon_toggle': True,
+    #         }
+    #     ),
+    # )
 
     # This will query all categories that belong to this particular user and push them in this form field (category)
     def __init__(self, user, *args, **kwargs):
@@ -258,10 +258,10 @@ class UpdateTodoForm(forms.ModelForm):
         model = Task
         fields = ('name', 'description', 'due', 'category', 'complete', 'activate')
 
-        # widgets = {
-        #     'due': DateTimeInput()
+        widgets = {
+            'due': DateTimeInput()
     
-        # }
+        }
     
     description = forms.CharField(required=False, widget=forms.Textarea(attrs={
         "class": "form-control",
@@ -269,18 +269,18 @@ class UpdateTodoForm(forms.ModelForm):
         "rows": 2
     }))
 
-    due = forms.DateTimeField(
-        widget=DateTimePicker(
-            options={
-                'useCurrent': True,
-                'collapse': False,
-            },
-            attrs={
-                'append': 'fa fa-calendar',
-                'icon_toggle': True,
-            }
-        ),
-    )
+    # due = forms.DateTimeField(
+    #     widget=DateTimePicker(
+    #         options={
+    #             'useCurrent': True,
+    #             'collapse': False,
+    #         },
+    #         attrs={
+    #             'append': 'fa fa-calendar',
+    #             'icon_toggle': True,
+    #         }
+    #     ),
+    # )
     # This will query all categories that belong to this particular user and push them in this form field (category)
     def __init__(self, user, *args, **kwargs):
         super(UpdateTodoForm, self).__init__(*args, **kwargs)
