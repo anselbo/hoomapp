@@ -218,5 +218,5 @@ MESSAGE_TAGS = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'   # I added this as django demand that i specify autofield for it
 
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
