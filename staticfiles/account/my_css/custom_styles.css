@@ -1,5 +1,11 @@
 .for_radius {
   border-radius: 17px;
+  margin-left: 130px;
+}
+
+.ooo {
+  margin-left: 155px;
+  border-radius: 17px;
 }
 
 .oga-radius {
@@ -49,4 +55,9 @@
   font-size: 25px !important;
   font-weight: bolder;
   color: #3354aa;
+}
+
+
+.for_height {
+  height: 51px;
 }
