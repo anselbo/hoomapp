@@ -26,7 +26,7 @@
           </div>
           {% else %}
           <div class="image">
-            <a href="{{ request.user.profile.profile_pic.url }}">
+            <a href="{% static 'account/dist/img/default.jpeg' %}">
               <img src="{% static 'account/dist/img/default.jpeg' %}" class="img-circle elevation-2" style="width: 50px; height: 50px; object-fit: cover" alt="User Image">
             </a>
           </div>
