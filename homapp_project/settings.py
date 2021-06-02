@@ -30,7 +30,7 @@ SECRET_KEY = '_^vkqd3ilfc_1*ix8=v8(8qmxbu-5^l=w$ds&+7$bdv3)xk#d_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['voodo.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['hoomapp.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
