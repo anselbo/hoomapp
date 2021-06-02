@@ -20,14 +20,14 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           {% if request.user.profile.profile_pic %}
           <div class="image">
-            <a href="{% url 'profile' %}">
-              <img src="{{ request.user.profile.profile_pic.url }}" class="img-circle elevation-2" style="width: 50px; height: 50px;" alt="User Image">
+            <a href="{{ request.user.profile.profile_pic.url }}">
+              <img src="{{ request.user.profile.profile_pic.url }}" class="img-circle elevation-2" style="width: 50px; height: 50px; object-fit: cover" alt="User Image">
             </a>
           </div>
           {% else %}
           <div class="image">
-            <a href="{% url 'profile' %}">
-              <img src="{% static 'account/dist/img/default.jpeg' %}" class="img-circle elevation-2" style="width: 50px; height: 50px;" alt="User Image">
+            <a href="{{ request.user.profile.profile_pic.url }}">
+              <img src="{% static 'account/dist/img/default.jpeg' %}" class="img-circle elevation-2" style="width: 50px; height: 50px; object-fit: cover" alt="User Image">
             </a>
           </div>
           {% endif %}

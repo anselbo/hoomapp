@@ -63,8 +63,13 @@
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <a href="{% url 'homapp:today_summary' %}" class="dropdown-item">
             <!-- Message Start -->
+            
             <div class="media">
-              <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height">
+              {% if request.user.profile.profile_pic %}
+                <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover">
+              {% else %}
+                <img src="{% static 'account/dist/img/default.jpeg' %}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% endif %}
               <div class="media-body">
                 <h3 class="dropdown-item-title mb-1">
                   Today's Summary
@@ -82,7 +87,11 @@
           <a href="{% url 'homapp:last_3_days' %}" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 img-circle mr-3 for_height">
+              {% if request.user.profile.profile_pic %}
+                <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% else %}
+                <img src="{% static 'account/dist/img/default.jpeg' %}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% endif %}
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   Last 3 days Summary
@@ -107,7 +116,11 @@
           <a href="{% url 'homapp:last_7_days' %}" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 img-circle mr-3 for_height">
+              {% if request.user.profile.profile_pic %}
+                <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% else %}
+                <img src="{% static 'account/dist/img/default.jpeg' %}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% endif %}
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   Last 7 Days Summary
@@ -123,7 +136,11 @@
           <a href="{% url 'homapp:current_week' %}" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 img-circle mr-3 for_height">
+              {% if request.user.profile.profile_pic %}
+                <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% else %}
+                <img src="{% static 'account/dist/img/default.jpeg' %}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% endif %}
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   This Week Summary
@@ -144,7 +161,11 @@
           <a href="{% url 'homapp:current_month' %}" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 img-circle mr-3 for_height">
+              {% if request.user.profile.profile_pic %}
+                <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% else %}
+                <img src="{% static 'account/dist/img/default.jpeg' %}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% endif %}
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                   This Month Summary
@@ -164,7 +185,11 @@
           <a href="{% url 'homapp:current_year' %}" class="dropdown-item">
             <!-- Message Start -->
             <div class="media mb-1">
-              <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 img-circle mr-3 for_height">
+              {% if request.user.profile.profile_pic %}
+                <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% else %}
+                <img src="{% static 'account/dist/img/default.jpeg' %}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% endif %}
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                  Year Summary
@@ -181,7 +206,11 @@
           <a href="{% url 'homapp:current_year' %}" class="dropdown-item">
             <!-- Message Start -->
             <div class="media mb-1">
-              <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 img-circle mr-3 for_height">
+              {% if request.user.profile.profile_pic %}
+                <img src="{{ request.user.profile.profile_pic.url }}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% else %}
+                <img src="{% static 'account/dist/img/default.jpeg' %}" alt="User Avatar" class="img-size-50 mr-3 img-circle for_height" style="object-fit: cover;">
+              {% endif %}
               <div class="media-body">
                 <h3 class="dropdown-item-title">
                  Uncompleted Tasks
