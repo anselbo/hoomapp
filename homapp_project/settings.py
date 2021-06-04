@@ -9,7 +9,10 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-import os 
+from django.contrib.messages import constants as messages
+import django_heroku
+import dj_database_url
+import os
 
 # This is exactly how to hide secret and sensitive information from exposing it out on windows
 # email_password = os.environ.get("EMAIL_PASSWORD")
@@ -18,8 +21,6 @@ import os
 
 
 # from decouple import config
-
-
 
 
 from pathlib import Path
@@ -58,7 +59,8 @@ INSTALLED_APPS = [
     'tempus_dominus',
     'active_link',
     'django.contrib.postgres',
-    
+    'storages',
+
 ]
 
 MIDDLEWARE = [
@@ -125,14 +127,11 @@ DATABASES = {
 
 #     }
 # }
-import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
 
 
-
 # Activate Django-Heroku.
-import django_heroku
 django_heroku.settings(locals())
 
 
@@ -171,8 +170,6 @@ USE_TZ = True
 DECIMAL_SEPARATOR = ','
 
 
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
@@ -184,13 +181,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 
-
-
-
-
 """ For media url and for media root """
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+AWS_QUERYSTRING_AUTH = False
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = 'AKIAZRK6L74RE2TUAX6F'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'homapp-bucket'
+AWS_DEFAULT_ACL = None
+AWS_S3_FILE_OVERWRITE = False
+
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -201,7 +203,7 @@ LOGIN_REDIRECT_URL = 'homapp:wears_list'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
-# for SMTP 
+# for SMTP
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -210,12 +212,7 @@ EMAIL_HOST_USER = 'homapp27@gmail.com'
 EMAIL_HOST_PASSWORD = 'pmppneqnchinfaff'
 
 
-
-
-
-
 # This is to help change message tags since bootstrap dosen't have error alert class instead it have danger
-from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
@@ -225,8 +222,5 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'   # I added this as django demand that i specify autofield for it
-
-
-
-
+# I added this as django demand that i specify autofield for it
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
