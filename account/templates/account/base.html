@@ -46,8 +46,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
  {% if messages %}
   {% for message in messages %}
-    <div class=" text-center alert {{ message.tags }}">
+    <div class=" text-center alert {{ message.tags }} alert-dismissible fade show ">
       {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
   {% endfor %}
  {% endif %}
@@ -85,6 +88,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <script src="{% static 'account/my_js/cleave.js' %}"></script>
 <script src="{% static 'account/my_js/own.js' %}"></script>
+
+{% block js %}
+  <script src="{% static 'account/my_js/jquery.js' %}"></script>
+{% endblock js %}
 
 </body>
 </html>
