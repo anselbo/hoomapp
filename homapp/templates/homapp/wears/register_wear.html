@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    Edit Profile
+    Edit Wear
 {% endblock title %}
 
 {% block content %}
@@ -42,7 +42,7 @@
               <form role="form" id="quickForm" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="card-body">
-                        
+                  <div id="forMessage"></div> <!--for flash message from jquery-->
 
                         <div class="form-group">
                         <!-- <label for="exampleInputEmail1">Email address</label> -->
@@ -58,10 +58,10 @@
                   
         
                     <div class="form-group">
-                      <!-- <label>Sex</label> -->
-                      <!-- <select class="form-control select2" style="width: 100%;"> -->
-                        {{ wear_register_form.category|as_crispy_field }}
-                      <!-- </select> -->
+                      <label class="mb-2 mr-2"">Category</label>
+                      <i class="fas fa-plus" id="categoryButton" data-toggle="modal" data-target="#exampleModal"></i>
+                      {{ wear_register_form.category|as_crispy_field }}
+                      
                     </div>
                     <div class="form-group">
                         <!-- <label>Sex</label> -->
@@ -135,8 +135,143 @@
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
+
+    <!-- Modal and form for adding Task category -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" id="modal_dismiss">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add New Wear Category here....</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="card card-primary ">
+                <div class="card-header">
+                  <h3 class="card-title">Go ahead and add..............</h3>
+                </div>
+                <!-- /.card-header -->
+              
+              
+                
+              <!-- form start -->
+                <form method="post" enctype="multipart/form-data" id="createWearCategoryForm" data-url="{% url 'homapp:register_wear' %}">
+                {% csrf_token %}
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                      {{ add_wear_category_form.category_name|as_crispy_field }}
+                      </div>
+
+                      
+                      <div class="form-group">
+                        {{ add_wear_category_form.activate|as_crispy_field }}
+                      </div>
+                    </div>
+      
+                      <div class="row">
+                        <div class="col-8">
+                          <button type="button" id="createWearCategoryButton" class="btn btn-primary">Save changes</button>
+                        </div>
+
+                        <div class="col-4">
+                          <button type="button" id="closeWearCategoryButton" class="btn btn-secondary"  data-dismiss="modal">Close</button>
+                          
+                        </div>
+                      </div>
+                            
+                  </div>
+                </div>
+                
+                
+                </form>
+
+                
+                  
+                
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    <!-- end modal -->
   </div>
   <!-- /.content-wrapper -->
 
  
 {% endblock content %}
+
+{% block js %}
+  <script>
+    $(document).ready(function(){
+      // To show the modal when the plus button is clicked
+      $("#categoryButton").click(function(){
+        $("#exampleModal").modal("show");
+
+
+        // On click of the close button, if there was any value in category name field, clear it and close the modal
+        $("button#closeWearCategoryButton").on("click", function(){
+          let category_name = $("input#id_category_name").val();
+          if (category_name){
+            $("input#id_category_name").val("");
+            $("exampleModal").modal("hide");
+
+            $("div#forMessage").html(`<div class="alert alert-danger alert-dismissible fade show showMessage mt-3 text-center" role="alert">
+                  <strong id="addName">Wear category not added successfully.....</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>`);
+        
+            $(".showMessage").show()
+                setTimeout(function(){
+                $(".showMessage").fadeOut(1000);
+            }, 2000);
+          }
+          
+        });
+
+      });
+
+      
+
+      // processing the form on click of the form button
+      $("button#createWearCategoryButton").click(function(){
+        let serializedData = $("form#createWearCategoryForm").serialize();
+
+        // making use of ajax call
+        $.ajax({
+          url: $("form#createWearCategoryForm").data("url"),
+          data: serializedData,
+          type: "post",
+          success: function(response){
+            $("select#select_wear_category").append(`<option value="${response.wear_category.category_name}">${response.wear_category.category_name}</option>`)
+              $("input#id_category_name").val("");
+              $("#exampleModal").modal("hide");
+
+              $("div#forMessage").html(`<div class="alert alert-success alert-dismissible fade show showMessage mt-3 text-center" role="alert">
+                <strong id="addName">${response.wear_category.category_name} Wear category added successfully</strong>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>`);
+      
+                $(".showMessage").show()
+                setTimeout(function(){
+                    $(".showMessage").fadeOut(1000);
+                }, 2000);
+          },
+          
+        });
+
+        
+
+      });
+
+      
+    });
+  </script>
+{% endblock js %}

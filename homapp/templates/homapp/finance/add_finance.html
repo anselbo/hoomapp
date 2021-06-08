@@ -43,17 +43,20 @@
                 {% csrf_token %}
                 <div class="card-body">
                         
+                    <div id="forMessage"></div> <!--for flash message from jquery-->
 
-                        <div class="form-group">
-                        {{ finance_add_form.title|as_crispy_field }}
-                        </div>
+                    <div class="form-group">
+                    {{ finance_add_form.title|as_crispy_field }}
+                    </div>
 
-                        <div class="form-group">
-                        {{ finance_add_form.description|as_crispy_field }}
-                        </div>
+                    <div class="form-group">
+                    {{ finance_add_form.description|as_crispy_field }}
+                    </div>
                   
         
                     <div class="form-group">
+                      <label class="mb-2 mr-2">Category</label>
+                          <i class="fas fa-plus" id="categoryButton" data-toggle="modal" data-target="#exampleModal"></i>
                         {{ finance_add_form.category|as_crispy_field }}
                     </div>
                     
@@ -99,6 +102,136 @@
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-  </div>
+
+
+        
+      <!-- Modal and form for adding Task category -->
+    <div class="modal fade xxx" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" id="modal_dismiss">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Finance Category here....</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="card card-primary ">
+              <div class="card-header">
+                <h3 class="card-title">Go ahead and add..............</h3>
+              </div>
+              <!-- /.card-header -->
+            
+            
+              
+            <!-- form start -->
+              <form method="post" enctype="multipart/form-data" id="createFinanceCategoryForm" data-url="{% url 'homapp:add_finance' %}">
+              {% csrf_token %}
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                    {{ add_finance_category_form.category_name|as_crispy_field }}
+                    </div>
+
+                    
+                    <div class="form-group">
+                      {{ add_finance_category_form.activate|as_crispy_field }}
+                    </div>
+                  </div>
+    
+                    <div class="row">
+                      <div class="col-8">
+                        <button type="button" id="createFinanceCategoryButton" class="btn btn-primary">Save changes</button>
+                      </div>
+
+                      <div class="col-4">
+                        <button type="button" id="closeFinanceCategoryButton" class="btn btn-secondary"  data-dismiss="modal">Close</button>
+                        
+                      </div>
+                    </div>
+                          
+                </div>
+              </div>
+              
+              
+              </form>
+
+              
+                
+              
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+      <!-- end modal -->
+
+
+</div>
   <!-- /.content-wrapper -->
 {% endblock content %}
+
+{% block js %}
+  <script>
+    $(document).ready(function(){
+      $("button#categoryButton").click(function(){
+        $("#exampleModal").modal("show");
+      });
+
+      // On click of the close button, if there was any value in category name field, clear it and close the modal
+      $("button#closeFinanceCategoryButton").click(function(){
+        let finance_category_name = $("input#finance_category").val();
+        if (finance_category_name){
+          $("input#finance_category").val("");
+          $("exampleModal").modal("hide");
+
+          $("div#forMessage").html(`<div class="alert alert-danger alert-dismissible fade show showMessage mt-3 text-center" role="alert">
+                <strong id="addName">Finance category not added successfully.....</strong>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>`);
+      
+          $(".showMessage").show()
+              setTimeout(function(){
+              $(".showMessage").fadeOut(1000);
+          }, 2000);
+        }
+          
+      });
+
+      // For processing form through ajax call
+      $("button#createFinanceCategoryButton").click(function(){
+        let serializedData = $("form#createFinanceCategoryForm").serialize();
+
+        // Using ajax on it
+        $.ajax({
+          url: $("form#createFinanceCategoryForm").data("url"),
+          data: serializedData,
+          type: "post",
+          success: function(response){
+            $("select#select_finance_category").append(`<option value="${response.finance.category_name}">${response.finance.category_name}</option>`)
+            $("input#finance_category").val("");
+            $("#exampleModal").modal("hide");
+
+            $("div#forMessage").html(`<div class="alert alert-success alert-dismissible fade show showMessage mt-3 text-center" role="alert">
+              <strong id="addName">${response.finance.category_name} finance category added successfully</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>`);
+    
+              $(".showMessage").show()
+              setTimeout(function(){
+                  $(".showMessage").fadeOut(1000);
+              }, 2000);
+          }
+        });
+      });
+
+
+    });
+  </script>
+{% endblock js %}

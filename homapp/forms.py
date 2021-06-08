@@ -17,7 +17,11 @@ class WearRegisterForm(forms.ModelForm):
         "rows": 3
     }))
 
+    category = forms.ModelChoiceField(
+        queryset=WearCategory.objects.all(), label='', widget=forms.Select(attrs={"id": "select_wear_category"}))
+
     # This will query all categories that belong to this particular user and push them in this form field (category)
+
     def __init__(self, user, *args, **kwargs):
         super(WearRegisterForm, self).__init__(*args, **kwargs)
         self.fields['category'].queryset = WearCategory.objects.filter(
@@ -121,7 +125,12 @@ class FinanceAddForm(forms.ModelForm):
         "rows": 3
     }))
 
+    # Using this to get rid of finance category label so i can add label in the template
+    category = forms.ModelChoiceField(
+        queryset=FinanceCategory.objects.all(), label='', widget=forms.Select(attrs={"id": "select_finance_category"}))
+
     # This will query all categories that belong to this particular user and push them in this form field (category)
+
     def __init__(self, user, *args, **kwargs):
         super(FinanceAddForm, self).__init__(*args, **kwargs)
         self.fields['category'].queryset = FinanceCategory.objects.filter(
@@ -155,6 +164,7 @@ class AddFinanceCategoryForm(forms.ModelForm):
     category_name = forms.CharField(required=False, widget=forms.TextInput(attrs={
         "class": "form-control",
         "placeholder": "Add category name",
+        "id": "finance_category",
 
     }))
 
@@ -207,7 +217,7 @@ class TodoForm(forms.ModelForm):
 
         }
     category = forms.ModelChoiceField(
-        queryset=TaskCategory.objects.all(), label='')
+        queryset=TaskCategory.objects.all(), label='', widget=forms.Select(attrs={"id": "select_task_category"}))
 
     description = forms.CharField(required=False, widget=forms.Textarea(attrs={
         "class": "form-control",
@@ -262,6 +272,8 @@ class TaskCategoryForm(forms.ModelForm):
     class Meta:
         model = TaskCategory
         fields = ('user', 'name', 'activate')
+
+    name = forms.CharField(widget=forms.TextInput(attrs={"id": "task_name"}))
 
 
 class UpdateTaskCategoryForm(forms.ModelForm):

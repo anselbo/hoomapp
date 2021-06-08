@@ -17,6 +17,7 @@ Todo List
 {% endblock link %}
 
 {% block content %}
+
 <div class="content-wrapper">
 
   <!-- Main content End-->
@@ -150,12 +151,13 @@ Todo List
             </div>
             <!-- /.card-header -->
 
-
+            
 
             <!-- form start -->
             <form method="post" enctype="multipart/form-data">
               {% csrf_token %}
               <div class="card-body">
+                <div id="forMessage"></div> <!--for flash message from jquery-->
                 <div class="row">
                   <div class="col-12">
                     <div class="form-group">
@@ -172,7 +174,7 @@ Todo List
                   
                     <div class="col-12 col-lg-6">
                         <div class="form-group">
-                          <label class="mb-2 mr-2"">Category</label>
+                          <label class="mb-2 mr-2">Category</label>
                           <i class="fas fa-plus" id="categoryButton" data-toggle="modal" data-target="#exampleModal"></i>
                           {{ todo_form.category|as_crispy_field }}
                         </div>
@@ -509,9 +511,9 @@ Todo List
 
 
 
-  <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <!-- Modal and form for adding Task category -->
+<div class="modal fade xxx" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" id="modal_dismiss">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Add New Task Category here....</h5>
@@ -529,7 +531,7 @@ Todo List
         
           
          <!-- form start -->
-          <form method="post" enctype="multipart/form-data">
+          <form method="post" enctype="multipart/form-data" id="createTaskCategoryForm" data-url="{% url 'homapp:list_task' %}">
           {% csrf_token %}
           <div class="card-body">
             <div class="row">
@@ -546,11 +548,11 @@ Todo List
  
                 <div class="row">
                   <div class="col-8">
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" id="createTaskCategoryButton" class="btn btn-primary">Save changes</button>
                   </div>
 
                   <div class="col-4">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="closeTaskCategoryButton" class="btn btn-secondary"  data-dismiss="modal">Close</button>
                     
                   </div>
                 </div>
@@ -582,7 +584,61 @@ Todo List
   $(document).ready(function () {
     $("button#categoryButton").click(function () {
       $("#exampleModal").show();
-    })
+    });
+
+    // On click of the close button, if there was any value in category name field, clear it and close the modal
+    $("button#closeTaskCategoryButton").click(function(){
+      let task_category_name = $("input#task_name").val();
+      if (task_category_name){
+        $("input#task_name").val("");
+        $("exampleModal").modal("hide");
+
+        $("div#forMessage").html(`<div class="alert alert-danger alert-dismissible fade show showMessage mt-3 text-center" role="alert">
+              <strong id="addName">Task category not added successfully.....</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>`);
+    
+        $(".showMessage").show()
+            setTimeout(function(){
+            $(".showMessage").fadeOut(1000);
+        }, 2000);
+      }
+        
+    });
+
+
+
+    // for processing form through ajax
+    $("button#createTaskCategoryButton").click(function(){
+      let serializedData = $("form#createTaskCategoryForm").serialize();
+
+      // using jquery ajax from here...
+      $.ajax({
+        url: $("form#createTaskCategoryForm").data("url"),
+        data: serializedData,
+        type: "post",
+        success: function(response){
+          $("select#select_task_category").append(`<option value="${response.tak.name}">${response.tak.name}</option>`)
+          $("input#task_name").val("");
+          $("#exampleModal").modal("hide");
+
+          $("div#forMessage").html(`<div class="alert alert-success alert-dismissible fade show showMessage mt-3 text-center" role="alert">
+            <strong id="addName">${response.tak.name} task category added successfully</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>`);
+  
+            $(".showMessage").show()
+            setTimeout(function(){
+                $(".showMessage").fadeOut(1000);
+            }, 2000);
+        }
+      });
+    });
+    
   });
 </script>
 {% endblock js %}

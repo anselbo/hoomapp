@@ -46,7 +46,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
  {% if messages %}
   {% for message in messages %}
-    <div class=" text-center alert {{ message.tags }} alert-dismissible fade show ">
+    <div class="text-center alert {{ message.tags }} alert-dismissible fade show showMessage">
       {{ message }}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
@@ -92,6 +92,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 {% block js %}
   <script src="{% static 'account/my_js/jquery.js' %}"></script>
 {% endblock js %}
+
+<script>
+  $(document).ready(function(){
+    $(".showMessage").show()
+      setTimeout(function(){
+          $(".showMessage").fadeOut(1000);
+      }, 2000);
+  });
+</script>
 
 </body>
 </html>

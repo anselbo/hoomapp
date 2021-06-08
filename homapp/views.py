@@ -17,6 +17,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from homapp_project.decorators import only_admin, unauthorized_user
 from django.contrib.auth.models import User
 from django.contrib.postgres.search import SearchVector
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
 
 
 @login_required
@@ -368,9 +370,21 @@ def add_wear(request):
     else:
         wear_register_form = WearRegisterForm(request.user)
 
+    # For wear category form....
+    add_wear_category_form = AddCategoryForm()
+    if request.method == 'POST':
+        add_wear_category_form = AddCategoryForm(request.POST)
+        if add_wear_category_form.is_valid():
+            add_user = add_wear_category_form.save(commit=False)
+            add_user.category_owner_id = request.user.id
+            add_user.save()
+            return JsonResponse({'wear_category': model_to_dict(add_user)}, status=200)
+            add_task_category_form = TaskCategoryForm()
+
     context = {
         'new_wear_reg': wear_register_form,
         'wear_register_form': wear_register_form,
+        'add_wear_category_form': add_wear_category_form,
     }
     return render(request, 'homapp/wears/register_wear.html', context)
 
@@ -712,9 +726,22 @@ def add_finance(request):
             return redirect('homapp:all_transactions')
     else:
         finance_add_form = FinanceAddForm(request.user)
+
+    # processing Add finance category here in this view
+    add_finance_category_form = AddFinanceCategoryForm()
+    if request.method == 'POST':
+        add_finance_category_form = AddFinanceCategoryForm(request.POST)
+        if add_finance_category_form.is_valid():
+            add_user = add_finance_category_form.save(commit=False)
+            add_user.category_owner_id = request.user.id
+            add_user.save()
+            return JsonResponse({'finance': model_to_dict(add_user)}, status=200)
+            add_task_category_form = TaskCategoryForm()
+
     context = {
         'new_finance': finance_add_form,
         'finance_add_form': finance_add_form,
+        'add_finance_category_form': add_finance_category_form,
     }
     return render(request, 'homapp/finance/add_finance.html', context)
 
@@ -2052,6 +2079,7 @@ def list_task(request):
             messages.success(request, 'Task added successfully'.title())
             return redirect('homapp:list_task')
 
+    # For task category....
     add_task_category_form = TaskCategoryForm()
     if request.method == 'POST':
         add_task_category_form = TaskCategoryForm(request.POST)
@@ -2059,10 +2087,9 @@ def list_task(request):
             add_user = add_task_category_form.save(commit=False)
             add_user.user_id = request.user.id
             add_user.save()
+            return JsonResponse({'tak': model_to_dict(add_user)}, status=200)
             add_task_category_form = TaskCategoryForm()
-            messages.success(
-                request, f'{add_user.name} was created successfully'.title())
-            return redirect('homapp:list_task')
+            # return redirect("homapp:list_task")
 
     # counting all tasks
     all_task_count = Task.objects.filter(
