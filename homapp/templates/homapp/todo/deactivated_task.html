@@ -138,7 +138,7 @@
           <div class="card-header">
             <h3 class="card-title">Add Task here...</h3>
             <a href="{% url 'homapp:list_task_category' %}" class="mt-2">
-              <div class="btn btn-light for_radius float-right">Add Task Category <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+              <div class="btn btn-light btn-sm for_radius float-right">All Task Categories</div>
             </a>
           </div>
           <!-- /.card-header -->
@@ -150,45 +150,47 @@
             {% csrf_token %}
             <div class="card-body">
               <div class="row">
-                <div class="col-4">
+                <div class="col-12">
                   <div class="form-group">
                   {{ todo_form.name|as_crispy_field }}
                   </div>
-
-                  
-                  <div class="form-group">
-                    {{ todo_form.complete|as_crispy_field }}
-                  </div>
-
-                  
                 </div>
 
-                <div class="col-4">
+                <div class="col-12 col-lg-6">
                   <div class="form-group">
                       {{ todo_form.due|as_crispy_field }}
                     </div>
-
-                    <div class="form-group">
-                      {{ todo_form.activate|as_crispy_field }}
-                    </div>
                 </div>
 
-                <div class="col-4">
+                <div class="col-12 col-lg-6">
                   <div class="form-group">
+                    <label class="mb-2 mr-2">Category</label>
                     {{ todo_form.category|as_crispy_field }}
                   </div>
-
-                  <input type="submit" value="Add Task" class="btn btn-primary btn-block">
                 </div>
 
                 <div class="col-12">
                   <div class="form-group">
                     {{ todo_form.description|as_crispy_field }}
                   </div>
-
                 </div>
 
-                
+                <div class="col-12 col-lg-6 mt-2">
+                  <div class="d-flex">
+                    <div class="form-group mr-5">
+                      {{ todo_form.complete|as_crispy_field }}
+                    </div>
+
+                    <div class="form-group">
+                      {{ todo_form.activate|as_crispy_field }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                  <input type="submit" value="Add Task" class="btn btn-primary btn-block">
+                </div>
+
               </div>
             </div>
           </form>
@@ -209,70 +211,77 @@
 
 
 
-       <!-- for my form -->
-       <form action="." method="get">
-        <div class="row">
-            <div class="col-3 ml-3 mb-2">
-              <div class="form-group">
-                <label>Categories</label>
-                <select class="form-control" name="category">
-                  <option>Choose...</option>
-                  
-                  {% for cat in task_categories %}}
-                  
-                  <option value="{{ cat.id }}">{{ cat }}</option>
-                 
-                  {% endfor %}
-                  
-                </select>
-              </div>
-      
-                <div class="d-flex">
-                    <div class="form-check mr-4">
-                      <input class="form-check-input" name="completed" type="checkbox" value="on" id="defaultCheck1">
-                      <label class="form-check-label" for="expenses">
-                        Completed
-                      </label>
-                    </div>
-                 
-                  
-                
-                    <div class="form-check">
-                      <input class="form-check-input" name="not_completed" type="checkbox" value="on" id="defaultCheck1">
-                      <label class="form-check-label" for="not_expenses">
-                        NotCompleted
-                      </label>
-                    </div>
-
+    <!-- for my form -->
+  <div class="content">
+    <div class="container-fluid">
+      <div class="card">
+        <form action="." method="get">
+          <div class="row m-3">
+              <div class="col-12 col-sm-6 col-lg-4 mb-2 mt-3">
+                <div class="form-group">
+                  <label>Categories</label>
+                  <select class="form-control" name="category">
+                    <option>Choose...</option>
+                    
+                    {% for cat in task_categories %}
+                    
+                    <option value="{{ cat.id }}">{{ cat }}</option>
+                    
+                    {% endfor %}
+                    
+                  </select>
                 </div>
-            </div>
-      
-            <div class="col-3">
-              <label>Start Date</label>
-              <input type="date"  class="form-control" name="start_date">
-            </div>
-      
-            <div class="col-4">
-              <label>End Date</label>
-              <input type="date" class="form-control mb-2" name="end_date">
+              </div>
+        
+              <div class="col-12 col-sm-6 col-lg-4 mt-3">
+                <label>Start Date</label>
+                <input type="date"  class="form-control" name="start_date">
+              </div>
+        
+              <div class="col-12 col-sm-6 col-lg-4 mt-3">
+                <label>End Date</label>
+                <input type="date" class="form-control mb-2" name="end_date">
+              </div>
 
               <!-- search form -->
-              <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" name="search" placeholder="Search Task" aria-label="Search">
+              <div class="col-12 col-sm-6 col-lg-12">
+                <label>Search</label>
+                <div class="input-group input-group-md">
+                  <input class="form-control" type="search" name="search" placeholder="Search Task" aria-label="Search">
+                </div>
               </div>
-
-            </div>
-      
+              
+              <div class="col-12  col-lg-7 mt-3">
+                <div class="d-flex">
+                  <div class="form-check mr-4">
+                    <input class="form-check-input" name="completed" type="checkbox" value="on" id="defaultCheck1">
+                    <label class="form-check-label" for="expenses">
+                      Completed
+                    </label>
+                  </div>
+              
+                
+              
+                  <div class="form-check">
+                    <input class="form-check-input" name="not_completed" type="checkbox" value="on" id="defaultCheck1">
+                    <label class="form-check-label" for="not_expenses">
+                      NotCompleted
+                    </label>
+                  </div>
+                </div>
+              </div>
             
-      
-              <div class="input-group-append">
-                <button class="btn btn-navbar mb-3" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-        </div>
-      </form> 
-
+        
+            <div class="col-12 col-sm-12 col-lg-5 mt-3">
+              <button class="btn btn-primary btn-block btn-sm mb-3" type="submit">
+                Search
+              </button>
+            </div>
+          </div>
+        </form>
+      </div> 
+    </div>
+  </div>
       
 
       <div class="content">
@@ -324,7 +333,7 @@
                 
           
                 <!-- /.card-header -->
-                <div class="card-body table-responsive p-0" style="height: 700px;">
+                <div class="card-body table-responsive p-0" style="height: 300px;">
                     <table class="table table-striped table table-head-fixed text-nowrap">
                       <thead>
                         <tr>

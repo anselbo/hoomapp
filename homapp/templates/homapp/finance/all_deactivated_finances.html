@@ -5,7 +5,7 @@
 {% load humanize %}
 
 {% block title %}
-    List
+    Deactivated Page
 {% endblock title %}
 
 {% block content %}
@@ -16,15 +16,15 @@
      <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-dark">{% if selected_category %}{{ selected_category.category_name  }}{% else %} Deactivated Finance Page{% endif %}
+            <div class="col-6 col-sm-6">
+              <h1 class="m-0 text-dark" style="font-size: 15px;">{% if selected_category %}{{ selected_category.category_name  }}{% else %} Deactivated Finance Page{% endif %}
               </h1>
             </div><!-- /.col -->
-            <div class="col-sm-6">
+            <div class="col-6 col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item">
                   <a href="{% url 'homapp:add_finance' %}">
-                    <div class="btn btn-primary for_radius">Add Finance <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+                    <div class="btn btn-primary btn-xs text-xs" style="margin-left: 75px; border-radius: 50px;"><i class="fas fa-plus-circle fa-lg ml-1 my-1"></i> Add Finance</div>
                 </a></li>
               </ol>
             </div><!-- /.col -->
@@ -64,7 +64,7 @@
                     {% endfor %}
                     <p>Last added finance</p>
                       {% else %}
-                        <h3><em style="font-size: 17px;">No last added finance yet</em></h3>
+                        <h3><h6 style="font-size: 14px;">No last added finance yet</h6></h3>
                         <p>Until finance is added</p>
                 {% endif %}
                 </div>
@@ -85,8 +85,8 @@
                     {% endfor %}
                     <p>Last Deactivated Finance</p>
                     {% else %}
-                      <h3><em style="font-size: 17px;">No last deactivated finance yet</em></h3>
-                      <p>until any finance is deactivated</p>
+                      <h3><h6 style="font-size: 14px;">No last deactivated finance yet</h6></h3>
+                      <p>until finance is deactivated</p>
                   {% endif %}
                 </div>
                 <div class="icon">
@@ -117,8 +117,8 @@
 
   <!-- for my form -->
   <form action="." method="get">
-    <div class="row">
-        <div class="col-3 ml-3 mb-2">
+    <div class="row m-3">
+        <div class="col-12 col-sm-6 col-lg-4 mb-2 mt-2">
           <div class="form-group">
             <label>Categories</label>
             <select class="form-control" name="category">
@@ -128,50 +128,54 @@
               {% endfor %}
             </select>
           </div>
-  
-            <div class="d-flex">
-                <div class="form-check mr-4">
-                  <input class="form-check-input" name="expenses" type="checkbox" value="on" id="defaultCheck1">
-                  <label class="form-check-label" for="expenses">
-                    Expenses
-                  </label>
-                </div>
-             
-              
-            
-                <div class="form-check">
-                  <input class="form-check-input" name="not_expenses" type="checkbox" value="on" id="defaultCheck1">
-                  <label class="form-check-label" for="not_expenses">
-                    NotExpenses
-                  </label>
-                </div>
-
-            </div>
         </div>
   
-        <div class="col-3">
+        <div class="col-12 col-sm-6 col-lg-4 mt-2">
           <label>Start Date</label>
           <input type="date"  class="form-control" name="start_date">
         </div>
   
-        <div class="col-4">
+        <div class="col-12 col-sm-6 col-lg-4 mt-2">
           <label>End Date</label>
           <input type="date" class="form-control mb-2" name="end_date">
+        </div>
 
           <!-- search form -->
-          <div class="input-group input-group-sm">
-            <input class="form-control form-control-navbar" type="search" name="search" placeholder="Search Finance" aria-label="Search">
+          <div class="col-12 col-sm-6 col-lg-12">
+            <label">Search</label>
+            <div class="input-group input-group-md">
+              <input class="form-control" type="search" name="search" placeholder="Search Finance" aria-label="Search">
+            </div>
           </div>
-
-        </div>
-  
         
-  
-          <div class="input-group-append">
-            <button class="btn btn-navbar mb-3" type="submit">
-              <i class="fas fa-search"></i>
-            </button>
+
+        <div class="col-12 col-sm-6 col-lg-7 mt-3">
+          <div class="d-flex">
+            <div class="form-check mr-4">
+              <input class="form-check-input" name="expenses" type="checkbox" value="on" id="defaultCheck1">
+              <label class="form-check-label" for="expenses">
+                Expenses
+              </label>
+            </div>
+        
+          
+        
+            <div class="form-check">
+              <input class="form-check-input" name="not_expenses" type="checkbox" value="on" id="defaultCheck1">
+              <label class="form-check-label" for="not_expenses">
+                NotExpenses
+              </label>
+            </div>
+
           </div>
+        </div>
+        
+        <div class="col-12 col-sm-6 col-lg-5 mt-3">
+            <button class="btn btn-secondary mt-0 ml-5 float-right btn-block btn-sm mb-3" type="submit">
+              Search
+            </button>
+        </div>
+
     </div>
   </form> 
  
@@ -185,7 +189,7 @@
               <div class="card">
                 <div class="card-header">    
                  <div class="row">
-                   <div class="col-sm-7">
+                   <div class="col-12 col-lg-7">
                     <h3 class="card-title">
                       
                       {% if selected_category %}
@@ -211,13 +215,13 @@
                    
 
  
-                   <div class="col-sm-5">
+                   <div class="col-12 col-lg-5 mt-2">
                       {% if selected_category %}
-                        <h3 class="card-title float-right">Total Amount: &#8358 {{ s_with_cat|intcomma }}</h3>
+                        <h3 class="card-title float-lg-right">Total Amount: &#8358 {{ s_with_cat|intcomma }}</h3>
                         {% elif selected_category is not None %}
-                        <h3 class="card-title float-right">Total Amount: &#8358 0</h3>
+                        <h3 class="card-title float-lg-right">Total Amount: &#8358 0</h3>
                       {% else %}
-                      <h3 class="card-title float-right">Total Amount: &#8358 {{ sum_all_dect_finances|intcomma }}</h3>
+                      <h3 class="card-title float-lg-right">Total Amount: &#8358 {{ sum_all_dect_finances|intcomma }}</h3>
                       {% endif %}
                    </div>
                  </div>
@@ -227,7 +231,7 @@
                 
                 
                 <!-- /.card-header -->
-                <div class="card-body table-responsive p-0" style="height: 400px;">
+                <div class="card-body table-responsive p-0" style="height: 300px;">
                     <table class="table table-striped table-head-fixed text-nowrap">
                       <thead>
                         <tr>

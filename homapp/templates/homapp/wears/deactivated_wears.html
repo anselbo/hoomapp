@@ -16,16 +16,17 @@
      <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-dark">{% if selected_category %}{{ selected_category.category_name  }}{% else %} Deactivated Wears Page{% endif %}
+            <div class="col-6">
+              <h1 class="m-0 text-dark" style="font-size: 17px;">{% if selected_category %}{{ selected_category.category_name  }}{% else %} Deactivated Wears Page{% endif %}
               </h1>
             </div><!-- /.col -->
-            <div class="col-sm-6">
+            <div class="col-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item">
                   <a href="{% url 'homapp:register_wear' %}">
-                    <div class="btn btn-primary for_radius">Add Wear <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
-                </a></li>
+                    <div class="btn btn-primary btn-sm text-xs" style="margin-left: 85px; border-radius: 50px;">Add Wear <i class="fas fa-plus-circle fa-lg ml-1"></i></div>
+                </a>
+              </li>
               </ol>
             </div><!-- /.col -->
           </div><!-- /.row -->
@@ -101,7 +102,7 @@
                     {% endfor %}
                     <p>Last Deactivated Wear</p>
                     {% else %}
-                      <h3><em style="font-size: 17px;">No last deactivated wears yet</em></h3>
+                      <h3><h6 style="font-size: 15px;">No last deactivated wears yet</h6></h3>
                       <p>until a wear is deactivated</p>
                   {% endif %}
                 </div>
@@ -132,58 +133,61 @@
 
 
  <!-- for my form -->
- <form action="." method="get">
-  <div class="row">
-      <div class="col-3 ml-3 mb-2">
-        <div class="form-group">
-          <label>Categories</label>
-          <select class="form-control" name="category">
-            <option>Choose...</option>
-            {% for cat in all_wear_categories %}
-            <option value="{{ cat.id }}">{{ cat }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-          <div class="d-flex">
-              <div class="form-check mr-4">
-                <input class="form-check-input" name="expenses" type="checkbox" value="on" id="defaultCheck1">
-                <label class="form-check-label" for="expenses">
-                  Expenses
-                </label>
+  <div class="content">
+    <div class="container-fluid">
+      <div class="card">
+        <form action="." method="get">
+          <div class="row m-3">
+              <div class="col-12  col-lg-4 mb-2 mt-3">
+                <div class="form-group">
+                  <label>Categories</label>
+                  <select class="form-control" name="category">
+                    <option>Choose...</option>
+                    {% for cat in all_wear_categories %}
+                    <option value="{{ cat.id }}">{{ cat }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
               </div>
-           
-            
-          
-              <div class="form-check">
-                <input class="form-check-input" name="not_expenses" type="checkbox" value="on" id="defaultCheck1">
-                <label class="form-check-label" for="not_expenses">
-                  NotExpenses
-                </label>
+
+              <div class="col-12  col-lg-4 mt-3">
+                <label>Start Date</label>
+                <input type="date"  class="form-control" name="start_date">
+              </div>
+
+              <div class="col-12 col-lg-4 mt-3">
+                <label>End Date</label>
+                <input type="date" class="form-control" name="end_date">
+              </div>
+
+              <div class="col-12  col-lg-7 mt-3">
+                <div class="d-flex">
+                  <div class="form-check mr-4">
+                    <input class="form-check-input" name="expenses" type="checkbox" value="on" id="defaultCheck1">
+                    <label class="form-check-label" for="expenses">
+                      Expenses
+                    </label>
+                  </div>
+              
+                
+              
+                  <div class="form-check">
+                    <input class="form-check-input" name="not_expenses" type="checkbox" value="on" id="defaultCheck1">
+                    <label class="form-check-label" for="not_expenses">
+                      NotExpenses
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12  col-lg-5 mt-3">
+                <button class="btn btn-secondary mt-0 ml-5 float-right btn-block btn-sm" type="submit">Search</button>
               </div>
           </div>
-      </div>
-
-      <div class="col-3">
-        <label>Start Date</label>
-        <input type="date"  class="form-control" name="start_date">
-      </div>
-
-      <div class="col-4">
-        <label>End Date</label>
-        <input type="date" class="form-control" name="end_date">
-      </div>
-
-      
-
-        <div class="input-group-append">
-          <button class="btn btn-navbar  mb-3" type="submit">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-  </div>
-</form>  
- 
+        </form>
+      </div>  
+    </div>
+  </div> 
 
 
 
@@ -194,7 +198,7 @@
               <div class="card">
                 <div class="card-header">    
                  <div class="row">
-                   <div class="col-sm-7">
+                   <div class="col-12 col-lg-7">
                     <h3 class="card-title">
                       
                       {% if selected_category %}
@@ -220,13 +224,13 @@
                    
 
  
-                   <div class="col-sm-5">
+                   <div class="col-12 col-lg-5 mt-2">
                       {% if selected_category %}
-                        <h3 class="card-title float-right">Total Amount: &#8358 {{ s_with_cat|intcomma }}</h3>
+                        <h3 class="card-title float-lg-right">Total Amount: &#8358 {{ s_with_cat|intcomma }}</h3>
                         {% elif selected_category is not None %}
-                        <h3 class="card-title float-right">Total Amount: &#8358 0</h3>
+                        <h3 class="card-title float-lg-right">Total Amount: &#8358 0</h3>
                       {% else %}
-                      <h3 class="card-title float-right">Total Amount: &#8358 {{ sum_all_d_wears|intcomma }}</h3>
+                      <h3 class="card-title float-lg-right">Total Amount: &#8358 {{ sum_all_d_wears|intcomma }}</h3>
                       {% endif %}
                    </div>
                  </div>
@@ -241,7 +245,7 @@
                 
                 
                 <!-- /.card-header -->
-                <div class="card-body table-responsive p-0" style="height: 400px;">
+                <div class="card-body table-responsive p-0" style="height: 300px;">
                     <table class="table table-striped table-head-fixed text-nowrap">
                       <thead>
                         <tr>

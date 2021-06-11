@@ -219,7 +219,7 @@
               <div class="card">
                 <div class="card-header">    
                  <div class="row">
-                   <div class="col-sm-7">
+                   <div class="col-12 col-lg-7">
                     <h3 class="card-title">
                       
                       {% if selected_category %}
@@ -242,13 +242,13 @@
 
                   
                    
-                   <div class="col-sm-5">
+                   <div class="col-12 col-lg-5 mt-2">
                     {% if selected_category %}
-                      <h3 class="card-title float-right">Total Amount: &#8358 {{ s_with_cat|intcomma }}</h3>
+                      <h3 class="card-title float-lg-right">Total Amount: &#8358 {{ s_with_cat|intcomma }}</h3>
                       {% elif selected_category is not None %}
-                      <h3 class="card-title float-right">Total Amount: &#8358 0</h3>
+                      <h3 class="card-title float-lg-right">Total Amount: &#8358 0</h3>
                     {% else %}
-                    <h3 class="card-title float-right">Total Amount: &#8358 {{ sum_all_n_wears|intcomma }}</h3>
+                    <h3 class="card-title float-lg-right">Total Amount: &#8358 {{ sum_all_n_wears|intcomma }}</h3>
                     {% endif %}
 
                    </div>
