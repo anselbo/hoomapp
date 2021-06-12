@@ -611,6 +611,11 @@ Todo List
             setTimeout(function(){
             $(".showMessage").fadeOut(1000);
         }, 2000);
+
+        // Reload this page dynamically to avoid duplication of data submission
+        setTimeout(function(){
+          location.reload(true);
+          }, 1000);
       }
         
     });
@@ -624,6 +629,7 @@ Todo List
       // using jquery ajax from here...
       $.ajax({
         url: $("form#createTaskCategoryForm").data("url"),
+        cache: false,
         data: serializedData,
         type: "post",
         success: function(response){
@@ -650,6 +656,16 @@ Todo List
             setTimeout(function(){
                 $(".showMessage").fadeOut(1000);
             }, 2000);
+
+          // Reload the page on a successful operation
+          // $("#reload").click(function(){
+          //   location.reload(true);
+          // });
+
+          // Reload this page dynamically to avoid duplication of data submission
+          setTimeout(function(){
+            location.reload(true);
+          }, 1000);
         }
       });
     });

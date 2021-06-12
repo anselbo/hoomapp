@@ -230,6 +230,11 @@
                 setTimeout(function(){
                 $(".showMessage").fadeOut(1000);
             }, 2000);
+
+            // Reload this page dynamically to avoid duplication of data submission
+            setTimeout(function(){
+              location.reload(true);
+            }, 1000);
           }
           
         });
@@ -263,6 +268,11 @@
                 setTimeout(function(){
                     $(".showMessage").fadeOut(1000);
                 }, 2000);
+
+                // Reload this page dynamically to avoid duplication of data submission
+                setTimeout(function(){
+                  location.reload(true);
+                }, 1000);
           },
           
         });
